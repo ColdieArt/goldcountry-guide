@@ -14,6 +14,12 @@ export interface Trade {
   description: string;
 }
 
+export interface BuildingOption {
+  slug: string;
+  name: string;
+  description: string;
+}
+
 export type MembershipStatus = "free" | "premium" | "featured";
 
 export interface CityCoverage {

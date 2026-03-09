@@ -11,6 +11,13 @@ const navTrades = [
   { slug: "plumbers", label: "Plumbers" },
 ];
 
+const navBuildingOptions = [
+  { slug: "custom-home", label: "Custom Home" },
+  { slug: "adu", label: "ADU" },
+  { slug: "remodel", label: "Remodel" },
+  { slug: "ada", label: "ADA" },
+];
+
 export default function Header() {
   return (
     <header className="border-b border-gray-200 bg-white">
@@ -29,6 +36,16 @@ export default function Header() {
               className="hidden hover:text-gray-600 sm:block"
             >
               {trade.label}
+            </Link>
+          ))}
+          <span className="hidden text-gray-300 sm:block">|</span>
+          {navBuildingOptions.map((option) => (
+            <Link
+              key={option.slug}
+              href={`/${option.slug}`}
+              className="hidden hover:text-gray-600 sm:block"
+            >
+              {option.label}
             </Link>
           ))}
         </nav>

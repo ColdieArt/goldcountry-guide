@@ -6,3 +6,4 @@ export * from "./contractors";
 export * from "./reviews";
 export * from "./cost-guides";
 export * from "./projects";
+export * from "./building-options";
