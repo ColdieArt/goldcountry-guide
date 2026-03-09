@@ -17,9 +17,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) return {};
+  const city = getCityBySlug(project.citySlug);
+  const trade = getTradeBySlug(project.tradeSlug);
+  const locationSuffix = city ? ` in ${city.name}, CA` : "";
+  const tradeName = trade ? `${trade.name} ` : "";
   return {
-    title: project.title,
-    description: project.description,
+    title: `${project.title}${locationSuffix} — ${tradeName}Project`,
+    description: `${project.description} Completed ${project.completedDate}${locationSuffix}.`,
   };
 }
 
@@ -43,6 +47,8 @@ export default async function ProjectPage({
     <div className="mx-auto max-w-4xl px-4 py-12">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-700/60">
+        <Link href="/" className="hover:text-gray-700">Home</Link>
+        <span>/</span>
         {trade && (
           <>
             <Link href={`/${trade.slug}`} className="hover:text-gray-700">
@@ -51,7 +57,7 @@ export default async function ProjectPage({
             <span>/</span>
           </>
         )}
-        <span>Project</span>
+        <span>{project.title}</span>
       </nav>
 
       <h1 className="mt-2 text-3xl font-bold text-gray-900">

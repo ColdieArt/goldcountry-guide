@@ -9,6 +9,7 @@ import { cities } from "@/data/cities";
 import { getContractorsByTrade } from "@/data/contractors";
 import { getAverageRating, getReviewCount } from "@/data/reviews";
 import QuickStart from "@/components/QuickStart";
+import JsonLd from "@/components/JsonLd";
 
 export function generateStaticParams() {
   return getAllCostGuideSlugs().map((slug) => ({ slug }));
@@ -18,9 +19,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const guide = getCostGuideBySlug(slug);
   if (!guide) return {};
+  const year = new Date(guide.lastUpdated).getFullYear();
+  const trade = getTradeBySlug(guide.tradeSlug);
   return {
-    title: `${guide.title} in Gold Country (2025)`,
-    description: guide.description,
+    title: `${guide.title} in Gold Country, CA (${year}) — Pricing Guide`,
+    description: `${guide.description} Typical range: $${guide.lowEstimate.toLocaleString()}–$${guide.highEstimate.toLocaleString()}.${trade ? ` Find ${trade.namePlural.toLowerCase()} near you.` : ""}`,
   };
 }
 
@@ -36,17 +39,37 @@ export default async function CostGuidePage({
   const trade = getTradeBySlug(guide.tradeSlug);
   const contractors = trade ? getContractorsByTrade(trade.slug) : [];
 
+  const costGuideLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: guide.title,
+    description: guide.description,
+    offers: {
+      "@type": "AggregateOffer",
+      lowPrice: guide.lowEstimate,
+      highPrice: guide.highEstimate,
+      priceCurrency: "USD",
+      offerCount: contractors.length,
+    },
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
+      <JsonLd data={costGuideLd} />
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-700/60">
-        {trade && (
-          <Link href={`/${trade.slug}`} className="hover:text-gray-700">
-            {trade.namePlural}
-          </Link>
-        )}
+        <Link href="/" className="hover:text-gray-700">Home</Link>
         <span>/</span>
-        <span>Cost Guide</span>
+        {trade && (
+          <>
+            <Link href={`/${trade.slug}`} className="hover:text-gray-700">
+              {trade.namePlural}
+            </Link>
+            <span>/</span>
+          </>
+        )}
+        <span>{guide.title}</span>
       </nav>
 
       <h1 className="mt-2 text-3xl font-bold text-gray-900">

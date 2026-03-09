@@ -27,15 +27,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const city = getCityBySlug(slug);
   if (city) {
     return {
-      title: `Home Services in ${city.name}, CA`,
-      description: `Find trusted contractors in ${city.name}, ${city.county} County. Browse electricians, plumbers, roofers, and more.`,
+      title: `Home Services in ${city.name}, CA — Find Local Contractors`,
+      description: `Find trusted, licensed contractors in ${city.name}, ${city.county} County, California. Browse electricians, plumbers, roofers, HVAC, and more. Read reviews and request free quotes.`,
     };
   }
   const trade = getTradeBySlug(slug);
   if (trade) {
     return {
-      title: `${trade.namePlural} in Gold Country`,
-      description: `Find licensed ${trade.namePlural.toLowerCase()} in Auburn, Grass Valley, Nevada City, and the Sierra foothills.`,
+      title: `${trade.namePlural} in Gold Country, CA — Licensed & Local`,
+      description: `Find licensed ${trade.namePlural.toLowerCase()} serving Auburn, Grass Valley, Nevada City, and the Sierra foothills. ${trade.description} Compare reviews and get quotes.`,
     };
   }
   return {};
@@ -77,7 +77,12 @@ function CityPage({ citySlug }: { citySlug: string }) {
     <div>
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-16 text-center">
-        <p className="text-sm font-medium uppercase tracking-wide text-gray-700/60">
+        <nav className="flex items-center justify-center gap-1 text-sm text-gray-700/60">
+          <Link href="/" className="hover:text-gray-700">Home</Link>
+          <span>/</span>
+          <span>{city.name}</span>
+        </nav>
+        <p className="mt-3 text-sm font-medium uppercase tracking-wide text-gray-700/60">
           {city.county} County, California
         </p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -413,7 +418,12 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
     <div>
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-16 text-center">
-        <p className="text-sm font-medium uppercase tracking-wide text-gray-700/60">
+        <nav className="flex items-center justify-center gap-1 text-sm text-gray-700/60">
+          <Link href="/" className="hover:text-gray-700">Home</Link>
+          <span>/</span>
+          <span>{trade.namePlural}</span>
+        </nav>
+        <p className="mt-3 text-sm font-medium uppercase tracking-wide text-gray-700/60">
           Gold Country &amp; Sierra Foothills
         </p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">

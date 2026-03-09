@@ -15,6 +15,7 @@ import { getProjectsByContractor, getProjectsByCity } from "@/data/projects";
 import { getCostGuidesByTrade } from "@/data/cost-guides";
 import { trades } from "@/data/trades";
 import QuickStart from "@/components/QuickStart";
+import JsonLd from "@/components/JsonLd";
 
 export function generateStaticParams() {
   const params: { slug: string; subSlug: string }[] = [];
@@ -43,8 +44,8 @@ export async function generateMetadata({
   const city = getCityBySlug(subSlug);
   if (city) {
     return {
-      title: `${trade.namePlural} in ${city.name}, CA`,
-      description: `Find licensed ${trade.namePlural.toLowerCase()} in ${city.name}, ${city.county} County. Get quotes from trusted local professionals.`,
+      title: `${trade.namePlural} in ${city.name}, CA — Licensed & Reviewed`,
+      description: `Find licensed ${trade.namePlural.toLowerCase()} in ${city.name}, ${city.county} County, California. ${trade.description} Read reviews and request free quotes.`,
     };
   }
 
@@ -55,8 +56,8 @@ export async function generateMetadata({
       .filter(Boolean)
       .join(", ");
     return {
-      title: `${contractor.name} — ${trade.name} in ${cityNames}`,
-      description: contractor.description,
+      title: `${contractor.name} — ${trade.name} in ${cityNames}, CA`,
+      description: `${contractor.name} is a licensed ${trade.name.toLowerCase()} serving ${cityNames}. ${contractor.description.slice(0, 140)}`,
     };
   }
 
@@ -131,8 +132,21 @@ function TradeCityPage({
   );
   allReviews.sort((a, b) => b.date.localeCompare(a.date));
 
+  const tradeCityBreadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://goldcountry.guide/" },
+      { "@type": "ListItem", position: 2, name: trade.namePlural, item: `https://goldcountry.guide/${trade.slug}` },
+      { "@type": "ListItem", position: 3, name: city.name, item: `https://goldcountry.guide/${city.slug}` },
+      { "@type": "ListItem", position: 4, name: `${trade.namePlural} in ${city.name}` },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
+      <JsonLd data={tradeCityBreadcrumbLd} />
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-700/60">
         <Link href="/" className="hover:text-gray-700">
@@ -541,8 +555,66 @@ function ContractorProfilePage({
   const isActive = contractor.active;
   const isPaid = isActive && contractor.membershipStatus !== "free";
 
+  // ── JSON-LD structured data ────────────────────────────────────
+  const primaryCity = getCityBySlug(contractor.primaryCitySlug);
+  const jsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: contractor.name,
+    description: contractor.description,
+    telephone: contractor.phone,
+    ...(contractor.website && { url: contractor.website }),
+    ...(primaryCity && {
+      areaServed: allCities.map((c) => ({
+        "@type": "City",
+        name: c!.name,
+      })),
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: primaryCity.name,
+        addressRegion: "CA",
+        addressCountry: "US",
+      },
+    }),
+    ...(avg !== null && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: avg,
+        reviewCount: reviews.length,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }),
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://goldcountry.guide/",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: trade.namePlural,
+        item: `https://goldcountry.guide/${trade.slug}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: contractor.name,
+      },
+    ],
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
+      <JsonLd data={[jsonLd, breadcrumbLd]} />
+
       {/* Inactive banner */}
       {!isActive && (
         <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
