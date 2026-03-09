@@ -3,9 +3,11 @@ import Link from "next/link";
 import {
   getProjectBySlug,
   getAllProjectSlugs,
+  getProjectsByTrade,
 } from "@/data/projects";
 import { getTradeBySlug } from "@/data/trades";
 import { getContractorBySlug } from "@/data/contractors";
+import { getCityBySlug } from "@/data/cities";
 
 export function generateStaticParams() {
   return getAllProjectSlugs().map((slug) => ({ slug }));
@@ -27,28 +29,37 @@ export default function ProjectPage({
 }) {
   const project = getProjectBySlug(params.slug);
   if (!project) notFound();
-  const contractor = getContractorBySlug(project.contractorSlug);
 
+  const contractor = getContractorBySlug(project.contractorSlug);
   const trade = getTradeBySlug(project.tradeSlug);
+  const city = getCityBySlug(project.citySlug);
+  const relatedProjects = getProjectsByTrade(project.tradeSlug).filter(
+    (p) => p.slug !== project.slug
+  );
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
-      <div className="text-sm text-amber-700/60">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-1 text-sm text-amber-700/60">
         {trade && (
-          <Link href={`/${trade.slug}`} className="hover:text-amber-700">
-            {trade.namePlural}
-          </Link>
+          <>
+            <Link href={`/${trade.slug}`} className="hover:text-amber-700">
+              {trade.namePlural}
+            </Link>
+            <span>/</span>
+          </>
         )}
-        {" / Project"}
-      </div>
+        <span>Project</span>
+      </nav>
 
       <h1 className="mt-2 text-3xl font-bold text-amber-900">
         {project.title}
       </h1>
-      <p className="mt-3 max-w-2xl text-amber-700/70">
+      <p className="mt-3 max-w-2xl leading-relaxed text-amber-700/70">
         {project.description}
       </p>
 
+      {/* Details */}
       <div className="mt-8 rounded-lg border border-amber-200 p-6">
         <h2 className="font-semibold text-amber-900">Project Details</h2>
         <dl className="mt-3 space-y-2 text-sm">
@@ -58,8 +69,34 @@ export default function ProjectPage({
           </div>
           <div className="flex gap-2">
             <dt className="font-medium text-amber-800">Location:</dt>
-            <dd className="text-amber-700/70 capitalize">{project.citySlug}</dd>
+            <dd>
+              {city ? (
+                <Link
+                  href={`/${city.slug}`}
+                  className="text-amber-700 underline hover:text-amber-900"
+                >
+                  {city.name}, CA
+                </Link>
+              ) : (
+                <span className="text-amber-700/70 capitalize">
+                  {project.citySlug}
+                </span>
+              )}
+            </dd>
           </div>
+          {trade && (
+            <div className="flex gap-2">
+              <dt className="font-medium text-amber-800">Trade:</dt>
+              <dd>
+                <Link
+                  href={`/${trade.slug}`}
+                  className="text-amber-700 underline hover:text-amber-900"
+                >
+                  {trade.namePlural}
+                </Link>
+              </dd>
+            </div>
+          )}
           {contractor && (
             <div className="flex gap-2">
               <dt className="font-medium text-amber-800">Contractor:</dt>
@@ -76,15 +113,43 @@ export default function ProjectPage({
         </dl>
       </div>
 
-      {trade && (
+      {/* CTA */}
+      {trade && city && (
         <div className="mt-8">
           <Link
-            href={`/${trade.slug}/auburn`}
+            href={`/${trade.slug}/${city.slug}`}
             className="inline-block rounded-lg bg-amber-700 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
           >
-            Find {trade.namePlural} in Auburn
+            Find {trade.namePlural} in {city.name}
           </Link>
         </div>
+      )}
+
+      {/* Related projects */}
+      {relatedProjects.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-xl font-bold text-amber-900">
+            More {trade?.namePlural} Projects
+          </h2>
+          <div className="mt-4 space-y-3">
+            {relatedProjects.map((p) => {
+              const pCity = getCityBySlug(p.citySlug);
+              const pContractor = getContractorBySlug(p.contractorSlug);
+              return (
+                <Link
+                  key={p.slug}
+                  href={`/projects/${p.slug}`}
+                  className="block rounded-lg border border-amber-200 p-4 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                >
+                  <h3 className="font-medium text-amber-900">{p.title}</h3>
+                  <p className="mt-1 text-sm text-amber-700/60">
+                    {pContractor?.name} · {pCity?.name} · {p.completedDate}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
       )}
     </div>
   );
