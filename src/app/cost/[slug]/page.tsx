@@ -8,6 +8,7 @@ import { getTradeBySlug } from "@/data/trades";
 import { cities } from "@/data/cities";
 import { getContractorsByTrade } from "@/data/contractors";
 import { getAverageRating, getReviewCount } from "@/data/reviews";
+import QuickStart from "@/components/QuickStart";
 
 export function generateStaticParams() {
   return getAllCostGuideSlugs().map((slug) => ({ slug }));
@@ -82,6 +83,22 @@ export default async function CostGuidePage({
           Last updated {guide.lastUpdated}
         </p>
       </div>
+
+      {/* Guided Quick Start */}
+      {trade && (
+        <section className="mt-8">
+          <QuickStart
+            trade={trade.name}
+            tradePlural={trade.namePlural}
+            projectTypes={[
+              guide.title,
+              ...contractors.flatMap((c) => c.specialties).filter(
+                (s, i, arr) => arr.indexOf(s) === i && s !== guide.title
+              ),
+            ]}
+          />
+        </section>
+      )}
 
       {/* Find contractors by city */}
       {trade && (

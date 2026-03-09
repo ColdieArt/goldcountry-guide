@@ -12,6 +12,7 @@ import { getReviewsByContractor, getAverageRating, getReviewCount } from "@/data
 import { getProjectsByContractor, getProjectsByCity } from "@/data/projects";
 import { getCostGuidesByTrade } from "@/data/cost-guides";
 import { trades } from "@/data/trades";
+import QuickStart from "@/components/QuickStart";
 
 export function generateStaticParams() {
   const params: { slug: string; subSlug: string }[] = [];
@@ -196,6 +197,21 @@ function TradeCityPage({
           </div>
         </section>
       )}
+
+      {/* Guided Quick Start */}
+      <section className="mt-10">
+        <QuickStart
+          trade={trade.name}
+          tradePlural={trade.namePlural}
+          city={city.name}
+          projectTypes={Array.from(
+            new Set([
+              ...allSpecialties,
+              ...guides.map((g) => g.title),
+            ])
+          )}
+        />
+      </section>
 
       {/* Featured & Premium Contractors */}
       {promoted.length > 0 && (
