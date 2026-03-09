@@ -5,7 +5,7 @@ export const contractors: Contractor[] = [
     slug: "jc-electrical",
     name: "JC Electrical",
     tradeSlug: "electricians",
-    citySlugs: ["auburn"],
+    citySlugs: ["auburn", "newcastle", "loomis", "rocklin"],
     phone: "(530) 555-0101",
     website: "https://jcelectrical.example.com",
     description:
@@ -22,7 +22,7 @@ export const contractors: Contractor[] = [
     slug: "sierra-plumbing-co",
     name: "Sierra Plumbing Co.",
     tradeSlug: "plumbers",
-    citySlugs: ["auburn"],
+    citySlugs: ["auburn", "rocklin", "roseville", "loomis"],
     phone: "(530) 555-0202",
     website: "https://sierraplumbing.example.com",
     description:
@@ -39,7 +39,7 @@ export const contractors: Contractor[] = [
     slug: "gold-country-roofing",
     name: "Gold Country Roofing",
     tradeSlug: "roofers",
-    citySlugs: ["auburn"],
+    citySlugs: ["auburn", "grass-valley", "nevada-city", "newcastle"],
     phone: "(530) 555-0303",
     description:
       "Gold Country Roofing specializes in roof replacements and repairs for homes in the Sierra foothills. Experienced with composition shingle, tile, and metal roofing systems.",
