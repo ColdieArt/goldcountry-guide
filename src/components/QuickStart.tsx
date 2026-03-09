@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 interface QuickStartProps {
   trade: string;          // e.g. "Electrician"
@@ -24,30 +25,17 @@ export default function QuickStart({
 }: QuickStartProps) {
   const [projectType, setProjectType] = useState<string | null>(null);
   const [timeline, setTimeline] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
 
   if (projectTypes.length === 0) return null;
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    // v1: no backend — show confirmation. Form data is structured
-    // and ready to POST to an API endpoint when one exists.
-    setSubmitted(true);
-  }
-
-  if (submitted) {
-    return (
-      <div className="rounded-lg border-2 border-gray-300 bg-gray-50 p-6 text-center">
-        <p className="text-lg font-bold text-gray-900">Request Received</p>
-        <p className="mt-2 text-sm text-gray-700/70">
-          We&apos;ll connect you with{" "}
-          {city
-            ? `${tradePlural.toLowerCase()} in ${city}`
-            : tradePlural.toLowerCase()}{" "}
-          for your {projectType?.toLowerCase()} project. Expect a call shortly.
-        </p>
-      </div>
-    );
+  // Build prefilled URL for the full request form
+  function getRequestUrl() {
+    const params = new URLSearchParams();
+    params.set("trade", trade);
+    if (city) params.set("city", city);
+    if (projectType) params.set("projectType", projectType);
+    if (timeline) params.set("timeline", timeline);
+    return `/request?${params.toString()}`;
   }
 
   return (
@@ -97,61 +85,20 @@ export default function QuickStart({
         </div>
       )}
 
-      {/* Step 3: Contact form (revealed after timeline selected) */}
+      {/* Step 3: Link to full request form with prefills */}
       {projectType && timeline && (
-        <form onSubmit={handleSubmit} className="mt-6">
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div>
-              <label
-                htmlFor="qs-name"
-                className="block text-sm font-medium text-gray-800"
-              >
-                Name
-              </label>
-              <input
-                id="qs-name"
-                name="name"
-                type="text"
-                required
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:outline-none"
-                placeholder="Your name"
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="qs-phone"
-                className="block text-sm font-medium text-gray-800"
-              >
-                Phone
-              </label>
-              <input
-                id="qs-phone"
-                name="phone"
-                type="tel"
-                required
-                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-500 focus:outline-none"
-                placeholder="(530) 555-0000"
-              />
-            </div>
-          </div>
-
-          {/* Hidden prefilled fields */}
-          <input type="hidden" name="trade" value={trade} />
-          {city && <input type="hidden" name="city" value={city} />}
-          <input type="hidden" name="projectType" value={projectType} />
-          <input type="hidden" name="timeline" value={timeline} />
-
-          <button
-            type="submit"
-            className="mt-4 w-full rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800 sm:w-auto"
+        <div className="mt-6">
+          <Link
+            href={getRequestUrl()}
+            className="inline-block w-full rounded-lg bg-gray-900 px-5 py-2.5 text-center text-sm font-semibold text-white transition-colors hover:bg-gray-800 sm:w-auto"
           >
             Get Free Quotes
-          </button>
+          </Link>
           <p className="mt-2 text-xs text-gray-700/50">
             Free, no obligation. We&apos;ll match you with local{" "}
             {tradePlural.toLowerCase()}.
           </p>
-        </form>
+        </div>
       )}
     </div>
   );
