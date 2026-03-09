@@ -60,10 +60,16 @@ export default function CostGuidePage({
         <h2 className="font-semibold text-amber-900">
           What Affects the Price?
         </h2>
-        <p className="mt-2 text-sm text-amber-700/70">
-          Detailed cost breakdown content coming soon. This page will cover
-          factors that influence pricing, what to expect from quotes, and tips
-          for getting the best value.
+        <ul className="mt-3 space-y-1.5 text-sm text-amber-700/70">
+          {guide.factors.map((f) => (
+            <li key={f} className="flex items-start gap-2">
+              <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+              {f}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-xs text-amber-700/40">
+          Last updated {guide.lastUpdated}
         </p>
       </div>
 

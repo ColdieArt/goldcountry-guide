@@ -1,45 +1,46 @@
-export interface ProjectType {
-  slug: string;
-  title: string;
-  tradeSlug: string;
-  description: string;
-}
+import { Project } from "./types";
 
-export const projectTypes: ProjectType[] = [
+export const projects: Project[] = [
   {
-    slug: "panel-upgrade",
-    title: "Electrical Panel Upgrade",
+    slug: "panel-upgrade-smith-auburn",
+    title: "200A Panel Upgrade — Smith Residence",
     tradeSlug: "electricians",
+    contractorSlug: "jc-electrical",
     description:
-      "Upgrade your home's electrical panel to support modern appliances, EV chargers, and solar systems.",
+      "Upgraded a 1970s 100-amp panel to a modern 200-amp system to support EV charging, a heat pump, and future solar. Included new grounding and bonding to current code.",
+    completedDate: "2025-01-10",
+    citySlug: "auburn",
   },
   {
-    slug: "whole-home-rewire",
-    title: "Whole-Home Rewire",
-    tradeSlug: "electricians",
-    description:
-      "Replace outdated or unsafe wiring throughout your home to meet current electrical codes.",
-  },
-  {
-    slug: "roof-replacement",
-    title: "Roof Replacement",
-    tradeSlug: "roofers",
-    description:
-      "Full roof tear-off and replacement with new materials suited for the Sierra foothills climate.",
-  },
-  {
-    slug: "water-heater-install",
-    title: "Water Heater Installation",
+    slug: "tankless-heater-jones-auburn",
+    title: "Tankless Water Heater Install — Jones Home",
     tradeSlug: "plumbers",
+    contractorSlug: "sierra-plumbing-co",
     description:
-      "Install a new tank or tankless water heater with proper permitting and code compliance.",
+      "Replaced an aging 40-gallon tank water heater with a high-efficiency tankless unit. Included gas line resizing and venting modifications.",
+    completedDate: "2025-02-18",
+    citySlug: "auburn",
   },
 ];
 
-export function getProjectTypeBySlug(slug: string): ProjectType | undefined {
-  return projectTypes.find((p) => p.slug === slug);
+// ─── Query helpers ──────────────────────────────────────────────
+
+export function getProjectBySlug(slug: string): Project | undefined {
+  return projects.find((p) => p.slug === slug);
 }
 
-export function getAllProjectTypeSlugs(): string[] {
-  return projectTypes.map((p) => p.slug);
+export function getAllProjectSlugs(): string[] {
+  return projects.map((p) => p.slug);
+}
+
+export function getProjectsByContractor(contractorSlug: string): Project[] {
+  return projects.filter((p) => p.contractorSlug === contractorSlug);
+}
+
+export function getProjectsByTrade(tradeSlug: string): Project[] {
+  return projects.filter((p) => p.tradeSlug === tradeSlug);
+}
+
+export function getProjectsByCity(citySlug: string): Project[] {
+  return projects.filter((p) => p.citySlug === citySlug);
 }
