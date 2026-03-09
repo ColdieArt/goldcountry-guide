@@ -5,6 +5,10 @@ const navTrades = [
   { slug: "architects", label: "Architects" },
   { slug: "tree-service", label: "Tree Services" },
   { slug: "concrete-contractors", label: "Concrete" },
+  { slug: "hvac", label: "HVAC" },
+  { slug: "electricians", label: "Electricians" },
+  { slug: "roofers", label: "Roofers" },
+  { slug: "plumbers", label: "Plumbers" },
 ];
 
 export default function Header() {
