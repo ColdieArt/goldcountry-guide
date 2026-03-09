@@ -512,10 +512,20 @@ function ContractorProfilePage({
   const projects = getProjectsByContractor(contractor.slug);
   const guides = getCostGuidesByTrade(trade.slug);
 
+  // Membership controls: "free" contractors get a basic listing;
+  // "premium" and "featured" get lead-driving contact info, CTA, and website.
+  // To downgrade later, change membershipStatus to "free" — all gated
+  // sections use `isPaid` and will automatically hide.
+  const isPaid = contractor.membershipStatus !== "free";
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-700/60">
+        <Link href="/" className="hover:text-gray-700">
+          Home
+        </Link>
+        <span>/</span>
         <Link href={`/${trade.slug}`} className="hover:text-gray-700">
           {trade.namePlural}
         </Link>
@@ -523,113 +533,192 @@ function ContractorProfilePage({
         <span>{contractor.name}</span>
       </nav>
 
-      <h1 className="mt-2 text-3xl font-bold text-gray-900">
-        {contractor.name}
-      </h1>
+      {/* ── Header ── */}
+      <div className="mt-4">
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            {contractor.name}
+          </h1>
+          {isPaid && (
+            <span className="mt-1 shrink-0 rounded-full bg-gray-900 px-3 py-1 text-xs font-semibold text-white capitalize">
+              {contractor.membershipStatus}
+            </span>
+          )}
+        </div>
 
-      {/* Badges */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        {contractor.membershipStatus !== "free" && (
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 capitalize">
-            {contractor.membershipStatus} Member
-          </span>
-        )}
-        {contractor.licensed && (
+        {/* Quick stats row */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          {contractor.licensed && (
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
+              Licensed
+              {contractor.licenseNumber && ` (${contractor.licenseNumber})`}
+            </span>
+          )}
           <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-            Licensed{" "}
-            {contractor.licenseNumber && `(${contractor.licenseNumber})`}
+            {contractor.yearsInBusiness} years in business
           </span>
-        )}
-        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-          {contractor.yearsInBusiness} years in business
-        </span>
-        {avg !== null && (
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-            {avg} stars ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
-          </span>
-        )}
+          {avg !== null && (
+            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
+              {avg} stars ({reviews.length}{" "}
+              {reviews.length === 1 ? "review" : "reviews"})
+            </span>
+          )}
+        </div>
+
+        {/* Platform context line — keeps platform authority over contractor */}
+        <p className="mt-3 text-xs text-gray-700/50">
+          {trade.name} serving{" "}
+          {serviceCities.map((c) => c!.name).join(", ")}, CA
+          {" · "}Listed on GoldCountry.guide
+        </p>
       </div>
 
-      <p className="mt-6 leading-relaxed text-gray-800/80">
-        {contractor.description}
-      </p>
+      {/* ── CTA — Contact / Request Quote (paid only) ── */}
+      {isPaid && (
+        <div className="mt-6 rounded-lg border-2 border-gray-300 bg-gray-50 p-6">
+          <h2 className="font-semibold text-gray-900">
+            Contact {contractor.name}
+          </h2>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <a
+              href={`tel:${contractor.phone.replace(/[^+\d]/g, "")}`}
+              className="inline-flex items-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+            >
+              Call {contractor.phone}
+            </a>
+            {contractor.website && (
+              <a
+                href={contractor.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50"
+              >
+                Visit Website
+              </a>
+            )}
+          </div>
+          <p className="mt-2 text-xs text-gray-700/50">
+            Mention GoldCountry.guide when you call
+          </p>
+        </div>
+      )}
 
-      {/* Specialties */}
+      {/* ── Business Overview ── */}
+      <section className="mt-8">
+        <h2 className="text-xl font-bold text-gray-900">About</h2>
+        <p className="mt-3 leading-relaxed text-gray-800/80">
+          {contractor.description}
+        </p>
+      </section>
+
+      {/* ── Specialties ── */}
       {contractor.specialties.length > 0 && (
-        <div className="mt-6">
-          <h2 className="font-semibold text-gray-900">Specialties</h2>
-          <div className="mt-2 flex flex-wrap gap-2">
+        <section className="mt-8">
+          <h2 className="text-xl font-bold text-gray-900">Specialties</h2>
+          <div className="mt-3 flex flex-wrap gap-2">
             {contractor.specialties.map((s) => (
               <span
                 key={s}
-                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-sm text-gray-800"
+                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm text-gray-800"
               >
                 {s}
               </span>
             ))}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* Contact */}
-      <div className="mt-8 rounded-lg border border-gray-200 p-6">
-        <h2 className="font-semibold text-gray-900">Contact Information</h2>
-        <dl className="mt-3 space-y-2 text-sm">
-          <div className="flex gap-2">
-            <dt className="font-medium text-gray-800">Phone:</dt>
-            <dd className="text-gray-700/70">{contractor.phone}</dd>
-          </div>
-          {contractor.website && (
-            <div className="flex gap-2">
-              <dt className="font-medium text-gray-800">Website:</dt>
+      {/* ── Service Areas ── */}
+      <section className="mt-8">
+        <h2 className="text-xl font-bold text-gray-900">Service Areas</h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {serviceCities.map((city) => (
+            <Link
+              key={city!.slug}
+              href={`/${trade.slug}/${city!.slug}`}
+              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
+            >
+              {city!.name}, CA
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Business Details ── */}
+      <section className="mt-8">
+        <h2 className="text-xl font-bold text-gray-900">Business Details</h2>
+        <div className="mt-3 overflow-hidden rounded-lg border border-gray-200">
+          <dl className="divide-y divide-gray-100 text-sm">
+            <div className="flex justify-between px-4 py-3">
+              <dt className="font-medium text-gray-800">Trade</dt>
               <dd>
-                <a
-                  href={contractor.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-700 underline hover:text-gray-900"
+                <Link
+                  href={`/${trade.slug}`}
+                  className="text-gray-700 underline decoration-gray-300 hover:decoration-gray-500"
                 >
-                  {contractor.website.replace(/^https?:\/\//, "")}
-                </a>
+                  {trade.name}
+                </Link>
               </dd>
             </div>
-          )}
-          <div className="flex gap-2">
-            <dt className="font-medium text-gray-800">Service Areas:</dt>
-            <dd className="text-gray-700/70">
-              {serviceCities.map((city, i) => (
-                <span key={city!.slug}>
-                  {i > 0 && ", "}
-                  <Link
-                    href={`/${trade.slug}/${city!.slug}`}
-                    className="underline hover:text-gray-700"
-                  >
-                    {city!.name}
-                  </Link>
-                </span>
-              ))}
-            </dd>
-          </div>
-          <div className="flex gap-2">
-            <dt className="font-medium text-gray-800">Trade:</dt>
-            <dd className="text-gray-700/70">
-              <Link
-                href={`/${trade.slug}`}
-                className="underline hover:text-gray-700"
-              >
-                {trade.name}
-              </Link>
-            </dd>
-          </div>
-        </dl>
-      </div>
+            <div className="flex justify-between px-4 py-3">
+              <dt className="font-medium text-gray-800">Years in Business</dt>
+              <dd className="text-gray-700">{contractor.yearsInBusiness}</dd>
+            </div>
+            {contractor.licensed && (
+              <div className="flex justify-between px-4 py-3">
+                <dt className="font-medium text-gray-800">License</dt>
+                <dd className="text-gray-700">
+                  {contractor.licenseNumber || "Licensed"}
+                </dd>
+              </div>
+            )}
+            <div className="flex justify-between px-4 py-3">
+              <dt className="font-medium text-gray-800">Phone</dt>
+              <dd className="text-gray-700">{contractor.phone}</dd>
+            </div>
+            {/* Website visible to all, but linked only for paid */}
+            {contractor.website && (
+              <div className="flex justify-between px-4 py-3">
+                <dt className="font-medium text-gray-800">Website</dt>
+                <dd>
+                  {isPaid ? (
+                    <a
+                      href={contractor.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-700 underline decoration-gray-300 hover:decoration-gray-500"
+                    >
+                      {contractor.website.replace(/^https?:\/\//, "")}
+                    </a>
+                  ) : (
+                    <span className="text-gray-400">
+                      Upgrade to show website
+                    </span>
+                  )}
+                </dd>
+              </div>
+            )}
+            <div className="flex justify-between px-4 py-3">
+              <dt className="font-medium text-gray-800">Listing</dt>
+              <dd className="text-gray-700 capitalize">
+                {contractor.membershipStatus}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </section>
 
-      {/* Reviews */}
+      {/* ── Reviews ── */}
       {reviews.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-bold text-gray-900">
             Reviews ({reviews.length})
           </h2>
+          {avg !== null && (
+            <p className="mt-1 text-sm text-gray-700/70">
+              Average rating: {avg} out of 5 stars
+            </p>
+          )}
           <div className="mt-4 space-y-4">
             {reviews.map((r) => (
               <div
@@ -660,7 +749,7 @@ function ContractorProfilePage({
         </section>
       )}
 
-      {/* Completed projects */}
+      {/* ── Completed Projects ── */}
       {projects.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-bold text-gray-900">
@@ -686,12 +775,15 @@ function ContractorProfilePage({
         </section>
       )}
 
-      {/* Related cost guides */}
+      {/* ── Cost Guides (platform content, not contractor-owned) ── */}
       {guides.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-bold text-gray-900">
             {trade.name} Cost Guides
           </h2>
+          <p className="mt-1 text-sm text-gray-700/60">
+            Pricing data from GoldCountry.guide
+          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {guides.map((g) => (
               <Link
@@ -709,6 +801,74 @@ function ContractorProfilePage({
           </div>
         </section>
       )}
+
+      {/* ── Bottom CTA ── */}
+      <section className="mt-10 rounded-lg border-2 border-gray-300 bg-gray-50 p-8 text-center">
+        {isPaid ? (
+          <>
+            <h2 className="text-xl font-bold text-gray-900">
+              Ready to Get Started?
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-gray-700/70">
+              Contact {contractor.name} today for a free estimate on your{" "}
+              {trade.name.toLowerCase()} project.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-3">
+              <a
+                href={`tel:${contractor.phone.replace(/[^+\d]/g, "")}`}
+                className="inline-flex items-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+              >
+                Call {contractor.phone}
+              </a>
+              {contractor.website && (
+                <a
+                  href={contractor.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50"
+                >
+                  Visit Website
+                </a>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold text-gray-900">
+              Looking for a {trade.name} in{" "}
+              {serviceCities.map((c) => c!.name).join(" or ")}?
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-gray-700/70">
+              Browse more {trade.namePlural.toLowerCase()} on
+              GoldCountry.guide to compare options and read reviews.
+            </p>
+            <Link
+              href={`/${trade.slug}`}
+              className="mt-4 inline-flex items-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+            >
+              Browse All {trade.namePlural}
+            </Link>
+          </>
+        )}
+      </section>
+
+      {/* ── Cross-links ── */}
+      <section className="mt-10">
+        <h2 className="text-lg font-bold text-gray-900">
+          More {trade.namePlural} in Gold Country
+        </h2>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {cities.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/${trade.slug}/${c.slug}`}
+              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
+            >
+              {trade.namePlural} in {c.name}
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
