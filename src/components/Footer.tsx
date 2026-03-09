@@ -4,17 +4,17 @@ import { cities } from "@/data/cities";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gray-50">
+    <footer className="border-t border-gray-200 bg-gray-50" aria-label="Site footer">
       <div className="mx-auto max-w-6xl px-4 py-12">
         <div className="grid gap-8 sm:grid-cols-3">
           <div>
-            <h3 className="font-bold text-gray-900">GoldCountry.guide</h3>
+            <p className="font-bold text-gray-900">GoldCountry.guide</p>
             <p className="mt-2 text-sm text-gray-700/70">
               Helping Sierra foothills homeowners find trusted local contractors.
             </p>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-gray-900">Trades</h4>
+            <p className="text-sm font-semibold text-gray-900">Trades</p>
             <ul className="mt-2 space-y-1">
               {trades.map((trade) => (
                 <li key={trade.slug}>
@@ -29,7 +29,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-sm font-semibold text-gray-900">Cities</h4>
+            <p className="text-sm font-semibold text-gray-900">Cities</p>
             <ul className="mt-2 space-y-1">
               {cities.map((city) => (
                 <li key={city.slug}>

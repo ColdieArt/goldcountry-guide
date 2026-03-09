@@ -12,7 +12,7 @@ export default function Header() {
         >
           GoldCountry.guide
         </Link>
-        <nav className="flex items-center gap-6 text-sm font-medium text-gray-800">
+        <nav aria-label="Main navigation" className="flex items-center gap-6 text-sm font-medium text-gray-800">
           {cities.slice(0, 3).map((city) => (
             <Link
               key={city.slug}

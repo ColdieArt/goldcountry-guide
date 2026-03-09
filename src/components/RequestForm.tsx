@@ -133,6 +133,7 @@ export default function RequestForm({
               id="rf-trade"
               name="trade"
               required
+              aria-required="true"
               defaultValue={prefill?.trade ?? ""}
               className={selectClass}
             >
@@ -156,6 +157,7 @@ export default function RequestForm({
               id="rf-city"
               name="city"
               required
+              aria-required="true"
               defaultValue={prefill?.city ?? ""}
               className={selectClass}
             >
@@ -181,6 +183,7 @@ export default function RequestForm({
             name="projectType"
             type="text"
             required
+            aria-required="true"
             defaultValue={prefill?.projectType ?? ""}
             placeholder="e.g. Panel Upgrade, Roof Replacement"
             className={inputClass}
@@ -231,6 +234,7 @@ export default function RequestForm({
               id="rf-timeline"
               name="timeline"
               required
+              aria-required="true"
               defaultValue={prefill?.timeline ?? ""}
               className={selectClass}
             >
@@ -273,6 +277,8 @@ export default function RequestForm({
               name="name"
               type="text"
               required
+              aria-required="true"
+              autoComplete="name"
               placeholder="Your full name"
               className={inputClass}
             />
@@ -287,6 +293,8 @@ export default function RequestForm({
               name="email"
               type="email"
               required
+              aria-required="true"
+              autoComplete="email"
               placeholder="you@example.com"
               className={inputClass}
             />
@@ -301,6 +309,8 @@ export default function RequestForm({
               name="phone"
               type="tel"
               required
+              aria-required="true"
+              autoComplete="tel"
               placeholder="(530) 555-0000"
               className={inputClass}
             />
@@ -310,7 +320,10 @@ export default function RequestForm({
 
       {/* ── Error ── */}
       {error && (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p
+          role="alert"
+          className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+        >
           {error}
         </p>
       )}
@@ -320,6 +333,7 @@ export default function RequestForm({
         <button
           type="submit"
           disabled={submitting}
+          aria-busy={submitting}
           className="w-full rounded-lg bg-gray-900 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-gray-800 disabled:opacity-50 sm:w-auto"
         >
           {submitting ? "Submitting…" : "Submit Project Request"}
