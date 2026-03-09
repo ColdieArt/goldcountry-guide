@@ -22,6 +22,11 @@ export const contractors: Contractor[] = [
     membershipStatus: "featured",
     active: true,
     featuredProjectSlugs: ["panel-upgrade-smith-auburn"],
+    leadPreferences: {
+      premiumLevel: "premium",
+      acceptedBudgetTiers: ["medium", "large", "enterprise"],
+      maxLeadsPerMonth: 20,
+    },
   },
   {
     slug: "sierra-plumbing-co",
@@ -44,6 +49,10 @@ export const contractors: Contractor[] = [
     membershipStatus: "premium",
     active: true,
     featuredProjectSlugs: ["tankless-heater-jones-auburn"],
+    leadPreferences: {
+      premiumLevel: "standard",
+      acceptedBudgetTiers: ["small", "medium", "large"],
+    },
   },
   {
     slug: "gold-country-roofing",

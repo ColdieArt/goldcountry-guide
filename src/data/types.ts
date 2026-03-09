@@ -37,6 +37,7 @@ export interface Contractor {
   membershipStatus: MembershipStatus;
   active: boolean;                     // false = membership lapsed
   featuredProjectSlugs?: string[];
+  leadPreferences?: LeadPreferences;   // absent = not opted in to leads
 }
 
 // ─── Reviews ────────────────────────────────────────────────────
@@ -75,4 +76,29 @@ export interface Project {
   completedDate: string; // ISO date string
   citySlug: string;
   images?: string[]; // future: paths or URLs
+}
+
+// ─── Lead Routing ────────────────────────────────────────────────
+
+/**
+ * Budget tiers map form-submitted budget ranges to a normalized tier.
+ * Used to match leads against contractor preferences.
+ */
+export type BudgetTier = "small" | "medium" | "large" | "enterprise";
+
+/**
+ * Premium level controls lead access priority.
+ *   standard  — receives leads after premium window expires
+ *   premium   — gets early-access / first-look window on matching leads
+ */
+export type PremiumLevel = "standard" | "premium";
+
+/**
+ * Per-contractor lead preferences.
+ * Stored on the Contractor record; consumed by the lead-routing engine.
+ */
+export interface LeadPreferences {
+  premiumLevel: PremiumLevel;
+  acceptedBudgetTiers: BudgetTier[];  // which tiers this contractor wants
+  maxLeadsPerMonth?: number;          // optional cap (future billing)
 }
