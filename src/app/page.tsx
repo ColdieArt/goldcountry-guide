@@ -11,11 +11,11 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-amber-50 to-white px-4 py-20 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-amber-900 sm:text-5xl">
+      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-20 text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           Find Trusted Contractors in Gold Country
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-amber-800/70">
+        <p className="mx-auto mt-4 max-w-xl text-lg text-gray-800/70">
           Connect with licensed, local professionals across the Sierra
           foothills. Browse {trades.length} trades in {cities.length} cities.
         </p>
@@ -24,7 +24,7 @@ export default function Home() {
       {/* Featured contractors */}
       {featured.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 pt-16">
-          <h2 className="text-2xl font-bold text-amber-900">
+          <h2 className="text-2xl font-bold text-gray-900">
             Featured Contractors
           </h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -35,18 +35,18 @@ export default function Home() {
                 <Link
                   key={c.slug}
                   href={`/${c.tradeSlug}/${c.slug}`}
-                  className="rounded-lg border border-amber-300 bg-amber-50/50 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  className="rounded-lg border border-gray-300 bg-gray-50/50 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                 >
                   <div className="flex items-baseline justify-between">
-                    <h3 className="font-semibold text-amber-900">{c.name}</h3>
-                    <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-medium text-amber-800">
+                    <h3 className="font-semibold text-gray-900">{c.name}</h3>
+                    <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-800">
                       Featured
                     </span>
                   </div>
-                  <p className="mt-1 text-sm text-amber-700/70">
+                  <p className="mt-1 text-sm text-gray-700/70">
                     {c.specialties.slice(0, 3).join(" · ")}
                   </p>
-                  <p className="mt-2 text-sm text-amber-700/60">
+                  <p className="mt-2 text-sm text-gray-700/60">
                     {c.yearsInBusiness} years in business
                     {avg !== null && (
                       <> · {avg} stars ({count} {count === 1 ? "review" : "reviews"})</>
@@ -61,18 +61,18 @@ export default function Home() {
 
       {/* Trades grid */}
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <h2 className="text-2xl font-bold text-amber-900">Browse by Trade</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Browse by Trade</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {trades.map((trade) => (
             <Link
               key={trade.slug}
               href={`/${trade.slug}`}
-              className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+              className="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
             >
-              <h3 className="font-semibold text-amber-900">
+              <h3 className="font-semibold text-gray-900">
                 {trade.namePlural}
               </h3>
-              <p className="mt-1 text-sm text-amber-700/70">
+              <p className="mt-1 text-sm text-gray-700/70">
                 {trade.description}
               </p>
             </Link>
@@ -82,16 +82,16 @@ export default function Home() {
 
       {/* Cities grid */}
       <section className="mx-auto max-w-6xl px-4 pb-16">
-        <h2 className="text-2xl font-bold text-amber-900">Browse by City</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Browse by City</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {cities.map((city) => (
             <Link
               key={city.slug}
               href={`/${city.slug}`}
-              className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+              className="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
             >
-              <h3 className="font-semibold text-amber-900">{city.name}</h3>
-              <p className="mt-1 text-sm text-amber-700/70">
+              <h3 className="font-semibold text-gray-900">{city.name}</h3>
+              <p className="mt-1 text-sm text-gray-700/70">
                 {city.county} County
               </p>
             </Link>
@@ -102,8 +102,8 @@ export default function Home() {
       {/* Cost guides */}
       {costGuides.length > 0 && (
         <section className="mx-auto max-w-6xl px-4 pb-16">
-          <h2 className="text-2xl font-bold text-amber-900">Cost Guides</h2>
-          <p className="mt-2 text-amber-700/70">
+          <h2 className="text-2xl font-bold text-gray-900">Cost Guides</h2>
+          <p className="mt-2 text-gray-700/70">
             Plan your budget with local pricing data.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -111,10 +111,10 @@ export default function Home() {
               <Link
                 key={guide.slug}
                 href={`/cost/${guide.slug}`}
-                className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                className="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
               >
-                <h3 className="font-semibold text-amber-900">{guide.title}</h3>
-                <p className="mt-1 text-lg font-bold text-amber-800">
+                <h3 className="font-semibold text-gray-900">{guide.title}</h3>
+                <p className="mt-1 text-lg font-bold text-gray-800">
                   ${guide.lowEstimate.toLocaleString()} &ndash; $
                   {guide.highEstimate.toLocaleString()}
                 </p>

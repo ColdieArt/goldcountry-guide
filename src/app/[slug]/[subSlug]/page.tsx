@@ -103,20 +103,20 @@ function TradeCityPage({
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-amber-700/60">
-        <Link href={`/${trade.slug}`} className="hover:text-amber-700">
+      <nav className="flex items-center gap-1 text-sm text-gray-700/60">
+        <Link href={`/${trade.slug}`} className="hover:text-gray-700">
           {trade.namePlural}
         </Link>
         <span>/</span>
-        <Link href={`/${city.slug}`} className="hover:text-amber-700">
+        <Link href={`/${city.slug}`} className="hover:text-gray-700">
           {city.name}
         </Link>
       </nav>
 
-      <h1 className="mt-2 text-3xl font-bold text-amber-900">
+      <h1 className="mt-2 text-3xl font-bold text-gray-900">
         {trade.namePlural} in {city.name}, CA
       </h1>
-      <p className="mt-3 max-w-2xl text-amber-700/70">
+      <p className="mt-3 max-w-2xl text-gray-700/70">
         Browse licensed {trade.namePlural.toLowerCase()} serving {city.name} and{" "}
         {city.county} County.
       </p>
@@ -131,32 +131,32 @@ function TradeCityPage({
               <Link
                 key={c.slug}
                 href={`/${trade.slug}/${c.slug}`}
-                className="block rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                className="block rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
               >
                 <div className="flex items-baseline justify-between">
-                  <h2 className="text-lg font-semibold text-amber-900">
+                  <h2 className="text-lg font-semibold text-gray-900">
                     {c.name}
                   </h2>
                   <div className="flex items-center gap-2">
                     {c.membershipStatus !== "free" && (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 capitalize">
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800 capitalize">
                         {c.membershipStatus}
                       </span>
                     )}
                     {c.licensed && (
-                      <span className="text-xs font-medium text-green-700">
+                      <span className="text-xs font-medium text-gray-700">
                         Licensed
                       </span>
                     )}
                   </div>
                 </div>
-                <p className="mt-1 text-sm text-amber-700/70">
+                <p className="mt-1 text-sm text-gray-700/70">
                   {c.specialties.join(" · ")}
                 </p>
-                <p className="mt-1 text-sm text-amber-700/70">
+                <p className="mt-1 text-sm text-gray-700/70">
                   {c.description}
                 </p>
-                <p className="mt-2 text-sm text-amber-700/60">
+                <p className="mt-2 text-sm text-gray-700/60">
                   {c.yearsInBusiness} years in business · {c.phone}
                   {avg !== null && (
                     <> · {avg} stars ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})</>
@@ -167,13 +167,13 @@ function TradeCityPage({
           })}
         </div>
       ) : (
-        <div className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-8 text-center">
-          <p className="text-amber-800">
+        <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
+          <p className="text-gray-800">
             No {trade.namePlural.toLowerCase()} listed in {city.name} yet.
           </p>
-          <p className="mt-1 text-sm text-amber-700/60">
+          <p className="mt-1 text-sm text-gray-700/60">
             Are you a {trade.name.toLowerCase()} in {city.name}?{" "}
-            <span className="font-medium text-amber-700">
+            <span className="font-medium text-gray-700">
               Contact us to get listed.
             </span>
           </p>
@@ -182,7 +182,7 @@ function TradeCityPage({
 
       {/* Other cities for this trade */}
       <section className="mt-12">
-        <h2 className="text-lg font-bold text-amber-900">
+        <h2 className="text-lg font-bold text-gray-900">
           {trade.namePlural} in Other Cities
         </h2>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -192,7 +192,7 @@ function TradeCityPage({
               <Link
                 key={c.slug}
                 href={`/${trade.slug}/${c.slug}`}
-                className="rounded-full border border-amber-200 px-4 py-1.5 text-sm text-amber-800 transition-colors hover:bg-amber-50"
+                className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
               >
                 {c.name}
               </Link>
@@ -227,54 +227,54 @@ function ContractorProfilePage({
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-amber-700/60">
-        <Link href={`/${trade.slug}`} className="hover:text-amber-700">
+      <nav className="flex items-center gap-1 text-sm text-gray-700/60">
+        <Link href={`/${trade.slug}`} className="hover:text-gray-700">
           {trade.namePlural}
         </Link>
         <span>/</span>
         <span>{contractor.name}</span>
       </nav>
 
-      <h1 className="mt-2 text-3xl font-bold text-amber-900">
+      <h1 className="mt-2 text-3xl font-bold text-gray-900">
         {contractor.name}
       </h1>
 
       {/* Badges */}
       <div className="mt-4 flex flex-wrap gap-2">
         {contractor.membershipStatus !== "free" && (
-          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800 capitalize">
+          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800 capitalize">
             {contractor.membershipStatus} Member
           </span>
         )}
         {contractor.licensed && (
-          <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
+          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
             Licensed{" "}
             {contractor.licenseNumber && `(${contractor.licenseNumber})`}
           </span>
         )}
-        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+        <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
           {contractor.yearsInBusiness} years in business
         </span>
         {avg !== null && (
-          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800">
+          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
             {avg} stars ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
           </span>
         )}
       </div>
 
-      <p className="mt-6 leading-relaxed text-amber-800/80">
+      <p className="mt-6 leading-relaxed text-gray-800/80">
         {contractor.description}
       </p>
 
       {/* Specialties */}
       {contractor.specialties.length > 0 && (
         <div className="mt-6">
-          <h2 className="font-semibold text-amber-900">Specialties</h2>
+          <h2 className="font-semibold text-gray-900">Specialties</h2>
           <div className="mt-2 flex flex-wrap gap-2">
             {contractor.specialties.map((s) => (
               <span
                 key={s}
-                className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-sm text-amber-800"
+                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-sm text-gray-800"
               >
                 {s}
               </span>
@@ -284,22 +284,22 @@ function ContractorProfilePage({
       )}
 
       {/* Contact */}
-      <div className="mt-8 rounded-lg border border-amber-200 p-6">
-        <h2 className="font-semibold text-amber-900">Contact Information</h2>
+      <div className="mt-8 rounded-lg border border-gray-200 p-6">
+        <h2 className="font-semibold text-gray-900">Contact Information</h2>
         <dl className="mt-3 space-y-2 text-sm">
           <div className="flex gap-2">
-            <dt className="font-medium text-amber-800">Phone:</dt>
-            <dd className="text-amber-700/70">{contractor.phone}</dd>
+            <dt className="font-medium text-gray-800">Phone:</dt>
+            <dd className="text-gray-700/70">{contractor.phone}</dd>
           </div>
           {contractor.website && (
             <div className="flex gap-2">
-              <dt className="font-medium text-amber-800">Website:</dt>
+              <dt className="font-medium text-gray-800">Website:</dt>
               <dd>
                 <a
                   href={contractor.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-amber-700 underline hover:text-amber-900"
+                  className="text-gray-700 underline hover:text-gray-900"
                 >
                   {contractor.website.replace(/^https?:\/\//, "")}
                 </a>
@@ -307,14 +307,14 @@ function ContractorProfilePage({
             </div>
           )}
           <div className="flex gap-2">
-            <dt className="font-medium text-amber-800">Service Areas:</dt>
-            <dd className="text-amber-700/70">
+            <dt className="font-medium text-gray-800">Service Areas:</dt>
+            <dd className="text-gray-700/70">
               {serviceCities.map((city, i) => (
                 <span key={city!.slug}>
                   {i > 0 && ", "}
                   <Link
                     href={`/${trade.slug}/${city!.slug}`}
-                    className="underline hover:text-amber-700"
+                    className="underline hover:text-gray-700"
                   >
                     {city!.name}
                   </Link>
@@ -323,11 +323,11 @@ function ContractorProfilePage({
             </dd>
           </div>
           <div className="flex gap-2">
-            <dt className="font-medium text-amber-800">Trade:</dt>
-            <dd className="text-amber-700/70">
+            <dt className="font-medium text-gray-800">Trade:</dt>
+            <dd className="text-gray-700/70">
               <Link
                 href={`/${trade.slug}`}
-                className="underline hover:text-amber-700"
+                className="underline hover:text-gray-700"
               >
                 {trade.name}
               </Link>
@@ -339,31 +339,31 @@ function ContractorProfilePage({
       {/* Reviews */}
       {reviews.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-xl font-bold text-amber-900">
+          <h2 className="text-xl font-bold text-gray-900">
             Reviews ({reviews.length})
           </h2>
           <div className="mt-4 space-y-4">
             {reviews.map((r) => (
               <div
                 key={r.id}
-                className="rounded-lg border border-amber-200 p-5"
+                className="rounded-lg border border-gray-200 p-5"
               >
                 <div className="flex items-baseline justify-between">
-                  <span className="font-medium text-amber-900">
+                  <span className="font-medium text-gray-900">
                     {r.authorName}
                   </span>
-                  <span className="text-sm text-amber-700/60">{r.date}</span>
+                  <span className="text-sm text-gray-700/60">{r.date}</span>
                 </div>
-                <div className="mt-1 text-sm text-amber-600">
+                <div className="mt-1 text-sm text-gray-600">
                   {"★".repeat(r.rating)}
                   {"☆".repeat(5 - r.rating)}
                   {r.projectType && (
-                    <span className="ml-2 text-amber-700/60">
+                    <span className="ml-2 text-gray-700/60">
                       · {r.projectType}
                     </span>
                   )}
                 </div>
-                <p className="mt-2 text-sm leading-relaxed text-amber-800/70">
+                <p className="mt-2 text-sm leading-relaxed text-gray-800/70">
                   {r.text}
                 </p>
               </div>
@@ -375,7 +375,7 @@ function ContractorProfilePage({
       {/* Completed projects */}
       {projects.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-xl font-bold text-amber-900">
+          <h2 className="text-xl font-bold text-gray-900">
             Completed Projects
           </h2>
           <div className="mt-4 space-y-3">
@@ -385,10 +385,10 @@ function ContractorProfilePage({
                 <Link
                   key={p.slug}
                   href={`/projects/${p.slug}`}
-                  className="block rounded-lg border border-amber-200 p-4 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  className="block rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50"
                 >
-                  <h3 className="font-medium text-amber-900">{p.title}</h3>
-                  <p className="mt-1 text-sm text-amber-700/60">
+                  <h3 className="font-medium text-gray-900">{p.title}</h3>
+                  <p className="mt-1 text-sm text-gray-700/60">
                     {pCity?.name} · Completed {p.completedDate}
                   </p>
                 </Link>
@@ -401,7 +401,7 @@ function ContractorProfilePage({
       {/* Related cost guides */}
       {guides.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-xl font-bold text-amber-900">
+          <h2 className="text-xl font-bold text-gray-900">
             {trade.name} Cost Guides
           </h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -409,10 +409,10 @@ function ContractorProfilePage({
               <Link
                 key={g.slug}
                 href={`/cost/${g.slug}`}
-                className="rounded-lg border border-amber-200 p-4 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50"
               >
-                <h3 className="font-medium text-amber-900">{g.title}</h3>
-                <p className="mt-1 text-sm font-bold text-amber-800">
+                <h3 className="font-medium text-gray-900">{g.title}</h3>
+                <p className="mt-1 text-sm font-bold text-gray-800">
                   ${g.lowEstimate.toLocaleString()} &ndash; $
                   {g.highEstimate.toLocaleString()}
                 </p>

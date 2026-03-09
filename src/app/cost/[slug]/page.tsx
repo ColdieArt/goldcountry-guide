@@ -38,9 +38,9 @@ export default async function CostGuidePage({
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-amber-700/60">
+      <nav className="flex items-center gap-1 text-sm text-gray-700/60">
         {trade && (
-          <Link href={`/${trade.slug}`} className="hover:text-amber-700">
+          <Link href={`/${trade.slug}`} className="hover:text-gray-700">
             {trade.namePlural}
           </Link>
         )}
@@ -48,37 +48,37 @@ export default async function CostGuidePage({
         <span>Cost Guide</span>
       </nav>
 
-      <h1 className="mt-2 text-3xl font-bold text-amber-900">
+      <h1 className="mt-2 text-3xl font-bold text-gray-900">
         {guide.title}
       </h1>
-      <p className="mt-3 max-w-2xl text-amber-700/70">{guide.description}</p>
+      <p className="mt-3 max-w-2xl text-gray-700/70">{guide.description}</p>
 
       {/* Cost range */}
-      <div className="mt-8 rounded-lg border border-amber-200 bg-amber-50 p-6">
-        <h2 className="font-semibold text-amber-900">Typical Cost Range</h2>
-        <p className="mt-2 text-3xl font-bold text-amber-800">
+      <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50 p-6">
+        <h2 className="font-semibold text-gray-900">Typical Cost Range</h2>
+        <p className="mt-2 text-3xl font-bold text-gray-800">
           ${guide.lowEstimate.toLocaleString()} &ndash; $
           {guide.highEstimate.toLocaleString()}
         </p>
-        <p className="mt-1 text-sm text-amber-700/60">
+        <p className="mt-1 text-sm text-gray-700/60">
           Based on typical projects in the Gold Country and Sierra foothills area
         </p>
       </div>
 
       {/* Factors */}
-      <div className="mt-8 rounded-lg border border-amber-200 p-6">
-        <h2 className="font-semibold text-amber-900">
+      <div className="mt-8 rounded-lg border border-gray-200 p-6">
+        <h2 className="font-semibold text-gray-900">
           What Affects the Price?
         </h2>
-        <ul className="mt-3 space-y-1.5 text-sm text-amber-700/70">
+        <ul className="mt-3 space-y-1.5 text-sm text-gray-700/70">
           {guide.factors.map((f) => (
             <li key={f} className="flex items-start gap-2">
-              <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+              <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />
               {f}
             </li>
           ))}
         </ul>
-        <p className="mt-4 text-xs text-amber-700/40">
+        <p className="mt-4 text-xs text-gray-700/40">
           Last updated {guide.lastUpdated}
         </p>
       </div>
@@ -86,7 +86,7 @@ export default async function CostGuidePage({
       {/* Find contractors by city */}
       {trade && (
         <section className="mt-8">
-          <h2 className="text-xl font-bold text-amber-900">
+          <h2 className="text-xl font-bold text-gray-900">
             Find {trade.namePlural} by City
           </h2>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -94,7 +94,7 @@ export default async function CostGuidePage({
               <Link
                 key={city.slug}
                 href={`/${trade.slug}/${city.slug}`}
-                className="rounded-full border border-amber-200 px-4 py-1.5 text-sm text-amber-800 transition-colors hover:bg-amber-50"
+                className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
               >
                 {trade.namePlural} in {city.name}
               </Link>
@@ -106,7 +106,7 @@ export default async function CostGuidePage({
       {/* Related contractors */}
       {contractors.length > 0 && (
         <section className="mt-8">
-          <h2 className="text-xl font-bold text-amber-900">
+          <h2 className="text-xl font-bold text-gray-900">
             {trade!.namePlural} in Gold Country
           </h2>
           <div className="mt-4 space-y-3">
@@ -117,17 +117,17 @@ export default async function CostGuidePage({
                 <Link
                   key={c.slug}
                   href={`/${trade!.slug}/${c.slug}`}
-                  className="block rounded-lg border border-amber-200 p-4 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  className="block rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50"
                 >
                   <div className="flex items-baseline justify-between">
-                    <span className="font-medium text-amber-900">{c.name}</span>
+                    <span className="font-medium text-gray-900">{c.name}</span>
                     {c.licensed && (
-                      <span className="text-xs font-medium text-green-700">
+                      <span className="text-xs font-medium text-gray-700">
                         Licensed
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-amber-700/60">
+                  <p className="mt-1 text-sm text-gray-700/60">
                     {c.yearsInBusiness} years in business
                     {avg !== null && (
                       <> · {avg} stars ({count})</>

@@ -75,19 +75,19 @@ function CityPage({ citySlug }: { citySlug: string }) {
   return (
     <div>
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-b from-amber-50 to-white px-4 py-16 text-center">
-        <p className="text-sm font-medium uppercase tracking-wide text-amber-700/60">
+      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-16 text-center">
+        <p className="text-sm font-medium uppercase tracking-wide text-gray-700/60">
           {city.county} County, California
         </p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-amber-900 sm:text-5xl">
+        <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           Home Services in {city.name}
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-amber-800/70">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-800/70">
           {city.description}
         </p>
-        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-amber-700/60">
+        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-700/60">
           <span>{allContractors.length} active contractor{allContractors.length !== 1 && "s"}</span>
-          <span className="text-amber-300">|</span>
+          <span className="text-gray-300">|</span>
           <span>{trades.length} service categories</span>
         </div>
       </section>
@@ -95,10 +95,10 @@ function CityPage({ citySlug }: { citySlug: string }) {
       <div className="mx-auto max-w-6xl px-4">
         {/* ── Browse by Trade ───────────────────────────────────────── */}
         <section className="py-12">
-          <h2 className="text-2xl font-bold text-amber-900">
+          <h2 className="text-2xl font-bold text-gray-900">
             Find a Contractor in {city.name}
           </h2>
-          <p className="mt-2 text-amber-700/70">
+          <p className="mt-2 text-gray-700/70">
             Browse by trade to see who&apos;s available in your area.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -112,25 +112,25 @@ function CityPage({ citySlug }: { citySlug: string }) {
                 <Link
                   key={trade.slug}
                   href={`/${trade.slug}/${city.slug}`}
-                  className="group rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  className="group rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                 >
                   <div className="flex items-baseline justify-between">
-                    <h3 className="font-semibold text-amber-900">
+                    <h3 className="font-semibold text-gray-900">
                       {trade.namePlural}
                     </h3>
                     {count > 0 ? (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
                         {count}
                       </span>
                     ) : (
-                      <span className="text-xs text-amber-500">Coming soon</span>
+                      <span className="text-xs text-gray-500">Coming soon</span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-amber-700/60">
+                  <p className="mt-1 text-sm text-gray-700/60">
                     {trade.description}
                   </p>
                   {count > 0 && (
-                    <p className="mt-2 text-xs font-medium text-amber-600 opacity-0 transition-opacity group-hover:opacity-100">
+                    <p className="mt-2 text-xs font-medium text-gray-600 opacity-0 transition-opacity group-hover:opacity-100">
                       View {count} {trade.namePlural.toLowerCase()} &rarr;
                     </p>
                   )}
@@ -142,11 +142,11 @@ function CityPage({ citySlug }: { citySlug: string }) {
 
         {/* ── Featured / Premium Contractors ────────────────────────── */}
         {featuredContractors.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               Top-Rated Contractors in {city.name}
             </h2>
-            <p className="mt-2 text-amber-700/70">
+            <p className="mt-2 text-gray-700/70">
               Trusted professionals serving the {city.name} area.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -158,23 +158,23 @@ function CityPage({ citySlug }: { citySlug: string }) {
                   <Link
                     key={c.slug}
                     href={`/${c.tradeSlug}/${c.slug}`}
-                    className="rounded-lg border border-amber-300 bg-amber-50/50 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                    className="rounded-lg border border-gray-300 bg-gray-50/50 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                   >
                     <div className="flex items-baseline justify-between">
-                      <h3 className="font-semibold text-amber-900">
+                      <h3 className="font-semibold text-gray-900">
                         {c.name}
                       </h3>
-                      <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-medium capitalize text-amber-800">
+                      <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium capitalize text-gray-800">
                         {c.membershipStatus}
                       </span>
                     </div>
-                    <p className="mt-1 text-sm text-amber-700/60">
+                    <p className="mt-1 text-sm text-gray-700/60">
                       {trade?.namePlural}
                     </p>
-                    <p className="mt-1 text-sm text-amber-700/70">
+                    <p className="mt-1 text-sm text-gray-700/70">
                       {c.specialties.join(" · ")}
                     </p>
-                    <div className="mt-3 flex items-center gap-3 text-sm text-amber-700/60">
+                    <div className="mt-3 flex items-center gap-3 text-sm text-gray-700/60">
                       {avg !== null && (
                         <span>
                           {"★".repeat(Math.round(avg))}
@@ -185,7 +185,7 @@ function CityPage({ citySlug }: { citySlug: string }) {
                         </span>
                       )}
                       {c.licensed && (
-                        <span className="text-xs font-medium text-green-700">
+                        <span className="text-xs font-medium text-gray-700">
                           Licensed
                         </span>
                       )}
@@ -200,8 +200,8 @@ function CityPage({ citySlug }: { citySlug: string }) {
 
         {/* ── All Contractors ───────────────────────────────────────── */}
         {allContractors.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               All Contractors Serving {city.name}
             </h2>
             <div className="mt-6 space-y-3">
@@ -213,24 +213,24 @@ function CityPage({ citySlug }: { citySlug: string }) {
                   <Link
                     key={c.slug}
                     href={`/${c.tradeSlug}/${c.slug}`}
-                    className="flex items-center justify-between rounded-lg border border-amber-200 p-4 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                    className="flex items-center justify-between rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50"
                   >
                     <div>
-                      <span className="font-medium text-amber-900">
+                      <span className="font-medium text-gray-900">
                         {c.name}
                       </span>
-                      <span className="ml-2 text-sm text-amber-700/60">
+                      <span className="ml-2 text-sm text-gray-700/60">
                         {trade?.namePlural}
                       </span>
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-amber-700/60">
+                    <div className="flex items-center gap-3 text-sm text-gray-700/60">
                       {avg !== null && (
                         <span>
                           {avg} ★ ({reviewCount})
                         </span>
                       )}
                       {c.licensed && (
-                        <span className="text-xs font-medium text-green-700">
+                        <span className="text-xs font-medium text-gray-700">
                           Licensed
                         </span>
                       )}
@@ -247,11 +247,11 @@ function CityPage({ citySlug }: { citySlug: string }) {
 
         {/* ── Cost Guides ───────────────────────────────────────────── */}
         {relevantGuides.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               How Much Does It Cost in {city.name}?
             </h2>
-            <p className="mt-2 text-amber-700/70">
+            <p className="mt-2 text-gray-700/70">
               Budget estimates based on local projects in the Gold Country area.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -261,17 +261,17 @@ function CityPage({ citySlug }: { citySlug: string }) {
                   <Link
                     key={g.slug}
                     href={`/cost/${g.slug}`}
-                    className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                    className="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                   >
-                    <h3 className="font-semibold text-amber-900">
+                    <h3 className="font-semibold text-gray-900">
                       {g.title}
                     </h3>
-                    <p className="mt-2 text-2xl font-bold text-amber-800">
+                    <p className="mt-2 text-2xl font-bold text-gray-800">
                       ${g.lowEstimate.toLocaleString()} &ndash; $
                       {g.highEstimate.toLocaleString()}
                     </p>
                     {trade && (
-                      <p className="mt-1 text-sm text-amber-700/60">
+                      <p className="mt-1 text-sm text-gray-700/60">
                         See {trade.namePlural.toLowerCase()} in{" "}
                         {city.name} &rarr;
                       </p>
@@ -285,11 +285,11 @@ function CityPage({ citySlug }: { citySlug: string }) {
 
         {/* ── Recent Projects ───────────────────────────────────────── */}
         {projects.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               Recent Projects in {city.name}
             </h2>
-            <p className="mt-2 text-amber-700/70">
+            <p className="mt-2 text-gray-700/70">
               See what local homeowners are getting done.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -302,15 +302,15 @@ function CityPage({ citySlug }: { citySlug: string }) {
                   <Link
                     key={p.slug}
                     href={`/projects/${p.slug}`}
-                    className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                    className="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                   >
-                    <h3 className="font-semibold text-amber-900">
+                    <h3 className="font-semibold text-gray-900">
                       {p.title}
                     </h3>
-                    <p className="mt-1 text-sm text-amber-700/70 line-clamp-2">
+                    <p className="mt-1 text-sm text-gray-700/70 line-clamp-2">
                       {p.description}
                     </p>
-                    <p className="mt-2 text-sm text-amber-700/60">
+                    <p className="mt-2 text-sm text-gray-700/60">
                       {contractor?.name}
                       {trade && <> · {trade.namePlural}</>}
                       {" · "}
@@ -324,11 +324,11 @@ function CityPage({ citySlug }: { citySlug: string }) {
         )}
 
         {/* ── CTA ───────────────────────────────────────────────────── */}
-        <section className="border-t border-amber-100 py-12 text-center">
-          <h2 className="text-2xl font-bold text-amber-900">
+        <section className="border-t border-gray-100 py-12 text-center">
+          <h2 className="text-2xl font-bold text-gray-900">
             Ready to Start Your Project?
           </h2>
-          <p className="mx-auto mt-2 max-w-lg text-amber-700/70">
+          <p className="mx-auto mt-2 max-w-lg text-gray-700/70">
             Browse available contractors in {city.name} and request quotes
             from licensed, local professionals.
           </p>
@@ -337,24 +337,24 @@ function CityPage({ citySlug }: { citySlug: string }) {
               <Link
                 key={trade.slug}
                 href={`/${trade.slug}/${city.slug}`}
-                className="rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+                className="rounded-lg bg-gray-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
               >
                 Find {trade.namePlural}
               </Link>
             ))}
           </div>
-          <p className="mt-4 text-sm text-amber-700/50">
+          <p className="mt-4 text-sm text-gray-700/50">
             Or browse{" "}
             <Link
               href="/"
-              className="underline hover:text-amber-700"
+              className="underline hover:text-gray-700"
             >
               all trades
             </Link>{" "}
             and{" "}
             <Link
               href="/"
-              className="underline hover:text-amber-700"
+              className="underline hover:text-gray-700"
             >
               all cities
             </Link>
@@ -363,11 +363,11 @@ function CityPage({ citySlug }: { citySlug: string }) {
 
         {/* ── Nearby Cities ─────────────────────────────────────────── */}
         {nearbyCities.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-xl font-bold text-gray-900">
               Also in {city.county} County
             </h2>
-            <p className="mt-2 text-sm text-amber-700/70">
+            <p className="mt-2 text-sm text-gray-700/70">
               Many contractors in {city.name} also serve these nearby areas.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -375,7 +375,7 @@ function CityPage({ citySlug }: { citySlug: string }) {
                 <Link
                   key={c.slug}
                   href={`/${c.slug}`}
-                  className="rounded-full border border-amber-200 px-4 py-2 text-sm font-medium text-amber-800 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-800 transition-colors hover:border-gray-400 hover:bg-gray-50"
                 >
                   {c.name}
                 </Link>
@@ -411,27 +411,27 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
   return (
     <div>
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-b from-amber-50 to-white px-4 py-16 text-center">
-        <p className="text-sm font-medium uppercase tracking-wide text-amber-700/60">
+      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-16 text-center">
+        <p className="text-sm font-medium uppercase tracking-wide text-gray-700/60">
           Gold Country &amp; Sierra Foothills
         </p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-amber-900 sm:text-5xl">
+        <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           {trade.namePlural} in Gold Country
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-amber-800/70">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-800/70">
           {trade.description}
         </p>
-        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-amber-700/60">
+        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-700/60">
           <span>
             {contractors.length} contractor{contractors.length !== 1 && "s"}
           </span>
-          <span className="text-amber-300">|</span>
+          <span className="text-gray-300">|</span>
           <span>
             {citiesWithContractors.length} of {cities.length} cities served
           </span>
           {guides.length > 0 && (
             <>
-              <span className="text-amber-300">|</span>
+              <span className="text-gray-300">|</span>
               <span>
                 {guides.length} cost {guides.length === 1 ? "guide" : "guides"}
               </span>
@@ -443,10 +443,10 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
       <div className="mx-auto max-w-6xl px-4">
         {/* ── Find by City ──────────────────────────────────────────── */}
         <section className="py-12">
-          <h2 className="text-2xl font-bold text-amber-900">
+          <h2 className="text-2xl font-bold text-gray-900">
             Find {trade.namePlural} by City
           </h2>
-          <p className="mt-2 text-amber-700/70">
+          <p className="mt-2 text-gray-700/70">
             Select your city to see available {trade.namePlural.toLowerCase()} in your area.
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -460,25 +460,25 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
                 <Link
                   key={city.slug}
                   href={`/${trade.slug}/${city.slug}`}
-                  className="group rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  className="group rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                 >
                   <div className="flex items-baseline justify-between">
-                    <h3 className="font-semibold text-amber-900">
+                    <h3 className="font-semibold text-gray-900">
                       {city.name}
                     </h3>
                     {count > 0 ? (
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
                         {count}
                       </span>
                     ) : (
-                      <span className="text-xs text-amber-500">Coming soon</span>
+                      <span className="text-xs text-gray-500">Coming soon</span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-amber-700/60">
+                  <p className="mt-1 text-sm text-gray-700/60">
                     {city.county} County
                   </p>
                   {count > 0 && (
-                    <p className="mt-2 text-xs font-medium text-amber-600 opacity-0 transition-opacity group-hover:opacity-100">
+                    <p className="mt-2 text-xs font-medium text-gray-600 opacity-0 transition-opacity group-hover:opacity-100">
                       View {count} {trade.namePlural.toLowerCase()} &rarr;
                     </p>
                   )}
@@ -490,18 +490,18 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
 
         {/* ── Common Services ───────────────────────────────────────── */}
         {allSpecialties.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               Common {trade.name} Services
             </h2>
-            <p className="mt-2 text-amber-700/70">
+            <p className="mt-2 text-gray-700/70">
               Typical project types handled by {trade.namePlural.toLowerCase()} in the Gold Country area.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               {allSpecialties.map((s) => (
                 <span
                   key={s}
-                  className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800"
+                  className="rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-medium text-gray-800"
                 >
                   {s}
                 </span>
@@ -512,11 +512,11 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
 
         {/* ── Cost Guides ───────────────────────────────────────────── */}
         {guides.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               How Much Do {trade.name} Services Cost?
             </h2>
-            <p className="mt-2 text-amber-700/70">
+            <p className="mt-2 text-gray-700/70">
               Local pricing data to help you budget your next project.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -524,10 +524,10 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
                 <Link
                   key={g.slug}
                   href={`/cost/${g.slug}`}
-                  className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  className="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                 >
-                  <h3 className="font-semibold text-amber-900">{g.title}</h3>
-                  <p className="mt-2 text-2xl font-bold text-amber-800">
+                  <h3 className="font-semibold text-gray-900">{g.title}</h3>
+                  <p className="mt-2 text-2xl font-bold text-gray-800">
                     ${g.lowEstimate.toLocaleString()} &ndash; $
                     {g.highEstimate.toLocaleString()}
                   </p>
@@ -535,9 +535,9 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
                     {g.factors.slice(0, 3).map((f) => (
                       <li
                         key={f}
-                        className="flex items-start gap-2 text-sm text-amber-700/60"
+                        className="flex items-start gap-2 text-sm text-gray-700/60"
                       >
-                        <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+                        <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-gray-400" />
                         {f}
                       </li>
                     ))}
@@ -550,8 +550,8 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
 
         {/* ── All Contractors ───────────────────────────────────────── */}
         {contractors.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               All {trade.namePlural} in Gold Country
             </h2>
             <div className="mt-6 space-y-4">
@@ -565,29 +565,29 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
                   <Link
                     key={c.slug}
                     href={`/${trade.slug}/${c.slug}`}
-                    className="block rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                    className="block rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                   >
                     <div className="flex items-baseline justify-between">
-                      <h3 className="text-lg font-semibold text-amber-900">
+                      <h3 className="text-lg font-semibold text-gray-900">
                         {c.name}
                       </h3>
                       <div className="flex items-center gap-2">
                         {c.membershipStatus !== "free" && (
-                          <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-medium capitalize text-amber-800">
+                          <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium capitalize text-gray-800">
                             {c.membershipStatus}
                           </span>
                         )}
                         {c.licensed && (
-                          <span className="text-xs font-medium text-green-700">
+                          <span className="text-xs font-medium text-gray-700">
                             Licensed
                           </span>
                         )}
                       </div>
                     </div>
-                    <p className="mt-1 text-sm text-amber-700/70">
+                    <p className="mt-1 text-sm text-gray-700/70">
                       {c.specialties.join(" · ")}
                     </p>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-amber-700/60">
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700/60">
                       <span>{c.yearsInBusiness} years in business</span>
                       {avg !== null && (
                         <span>
@@ -615,11 +615,11 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
 
         {/* ── Recent Projects ───────────────────────────────────────── */}
         {projects.length > 0 && (
-          <section className="border-t border-amber-100 py-12">
-            <h2 className="text-2xl font-bold text-amber-900">
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
               Recent {trade.name} Projects
             </h2>
-            <p className="mt-2 text-amber-700/70">
+            <p className="mt-2 text-gray-700/70">
               See completed work from {trade.namePlural.toLowerCase()} in the area.
             </p>
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
@@ -632,13 +632,13 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
                   <Link
                     key={p.slug}
                     href={`/projects/${p.slug}`}
-                    className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                    className="rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
                   >
-                    <h3 className="font-semibold text-amber-900">{p.title}</h3>
-                    <p className="mt-1 text-sm text-amber-700/70 line-clamp-2">
+                    <h3 className="font-semibold text-gray-900">{p.title}</h3>
+                    <p className="mt-1 text-sm text-gray-700/70 line-clamp-2">
                       {p.description}
                     </p>
-                    <p className="mt-2 text-sm text-amber-700/60">
+                    <p className="mt-2 text-sm text-gray-700/60">
                       {pContractor?.name}
                       {pCity && <> · {pCity.name}</>}
                       {" · "}
@@ -652,11 +652,11 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
         )}
 
         {/* ── CTA ───────────────────────────────────────────────────── */}
-        <section className="border-t border-amber-100 py-12 text-center">
-          <h2 className="text-2xl font-bold text-amber-900">
+        <section className="border-t border-gray-100 py-12 text-center">
+          <h2 className="text-2xl font-bold text-gray-900">
             Need a {trade.name}?
           </h2>
-          <p className="mx-auto mt-2 max-w-lg text-amber-700/70">
+          <p className="mx-auto mt-2 max-w-lg text-gray-700/70">
             Browse {trade.namePlural.toLowerCase()} by city and request quotes
             from licensed, local professionals in the Gold Country area.
           </p>
@@ -665,19 +665,19 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
               <Link
                 key={city.slug}
                 href={`/${trade.slug}/${city.slug}`}
-                className="rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
+                className="rounded-lg bg-gray-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
               >
                 {trade.namePlural} in {city.name}
               </Link>
             ))}
           </div>
-          <p className="mt-4 text-sm text-amber-700/50">
+          <p className="mt-4 text-sm text-gray-700/50">
             Or browse{" "}
-            <Link href="/" className="underline hover:text-amber-700">
+            <Link href="/" className="underline hover:text-gray-700">
               all trades
             </Link>{" "}
             and{" "}
-            <Link href="/" className="underline hover:text-amber-700">
+            <Link href="/" className="underline hover:text-gray-700">
               all cities
             </Link>
           </p>
