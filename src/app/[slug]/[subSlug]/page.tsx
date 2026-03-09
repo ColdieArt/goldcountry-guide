@@ -7,6 +7,8 @@ import {
   getContractorBySlug,
   getContractorsByTrade,
   getContractorsByTradeAndCity,
+  getAllCitySlugsForContractor,
+  getActiveCitySlugs,
 } from "@/data/contractors";
 import { getReviewsByContractor, getAverageRating, getReviewCount } from "@/data/reviews";
 import { getProjectsByContractor, getProjectsByCity } from "@/data/projects";
@@ -48,7 +50,7 @@ export async function generateMetadata({
 
   const contractor = getContractorBySlug(subSlug);
   if (contractor && contractor.tradeSlug === trade.slug) {
-    const cityNames = contractor.citySlugs
+    const cityNames = getAllCitySlugsForContractor(contractor)
       .map((s) => getCityBySlug(s)?.name)
       .filter(Boolean)
       .join(", ");
@@ -520,22 +522,45 @@ function ContractorProfilePage({
 }) {
   const trade = getTradeBySlug(tradeSlug)!;
   const contractor = getContractorBySlug(contractorSlug)!;
-  const serviceCities = contractor.citySlugs
+  // Profile page shows all cities (active + inactive coverage)
+  const allCities = getAllCitySlugsForContractor(contractor)
     .map((s) => getCityBySlug(s))
     .filter(Boolean);
+  // For display purposes, also know which cities are actively covered
+  const activeCities = new Set(getActiveCitySlugs(contractor));
   const reviews = getReviewsByContractor(contractor.slug);
   const avg = getAverageRating(contractor.slug);
   const projects = getProjectsByContractor(contractor.slug);
   const guides = getCostGuidesByTrade(trade.slug);
 
-  // Membership controls: "free" contractors get a basic listing;
-  // "premium" and "featured" get lead-driving contact info, CTA, and website.
-  // To downgrade later, change membershipStatus to "free" — all gated
-  // sections use `isPaid` and will automatically hide.
-  const isPaid = contractor.membershipStatus !== "free";
+  // Membership gating:
+  // - isPaid: contractor has premium/featured membership AND is active
+  // - isActive: contractor membership is not lapsed
+  // When inactive, the profile page still exists (canonical URL preserved)
+  // but all lead-driving features are stripped.
+  const isActive = contractor.active;
+  const isPaid = isActive && contractor.membershipStatus !== "free";
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-12">
+      {/* Inactive banner */}
+      {!isActive && (
+        <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
+          <p className="text-sm font-medium text-gray-700">
+            This listing is not currently active.
+          </p>
+          <p className="mt-1 text-sm text-gray-700/60">
+            Looking for {trade.namePlural.toLowerCase()}?{" "}
+            <Link
+              href={`/${trade.slug}`}
+              className="font-medium text-gray-900 underline decoration-gray-300 hover:decoration-gray-500"
+            >
+              Browse active {trade.namePlural.toLowerCase()}
+            </Link>
+          </p>
+        </div>
+      )}
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-gray-700/60">
         <Link href="/" className="hover:text-gray-700">
@@ -584,7 +609,7 @@ function ContractorProfilePage({
         {/* Platform context line — keeps platform authority over contractor */}
         <p className="mt-3 text-xs text-gray-700/50">
           {trade.name} serving{" "}
-          {serviceCities.map((c) => c!.name).join(", ")}, CA
+          {allCities.map((c) => c!.name).join(", ")}, CA
           {" · "}Listed on GoldCountry.guide
         </p>
       </div>
@@ -627,8 +652,8 @@ function ContractorProfilePage({
         </p>
       </section>
 
-      {/* ── Specialties ── */}
-      {contractor.specialties.length > 0 && (
+      {/* ── Specialties (active only) ── */}
+      {isActive && contractor.specialties.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-bold text-gray-900">Specialties</h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -644,21 +669,27 @@ function ContractorProfilePage({
         </section>
       )}
 
-      {/* ── Service Areas ── */}
-      <section className="mt-8">
-        <h2 className="text-xl font-bold text-gray-900">Service Areas</h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {serviceCities.map((city) => (
-            <Link
-              key={city!.slug}
-              href={`/${trade.slug}/${city!.slug}`}
-              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
-            >
-              {city!.name}, CA
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* ── Service Areas (active only — shows coverage status) ── */}
+      {isActive && (
+        <section className="mt-8">
+          <h2 className="text-xl font-bold text-gray-900">Service Areas</h2>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {allCities.map((city) => (
+              <Link
+                key={city!.slug}
+                href={`/${trade.slug}/${city!.slug}`}
+                className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
+                  activeCities.has(city!.slug)
+                    ? "border-gray-200 text-gray-800 hover:bg-gray-50"
+                    : "border-dashed border-gray-200 text-gray-400"
+                }`}
+              >
+                {city!.name}, CA
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ── Business Details ── */}
       <section className="mt-8">
@@ -688,12 +719,15 @@ function ContractorProfilePage({
                 </dd>
               </div>
             )}
-            <div className="flex justify-between px-4 py-3">
-              <dt className="font-medium text-gray-800">Phone</dt>
-              <dd className="text-gray-700">{contractor.phone}</dd>
-            </div>
-            {/* Website visible to all, but linked only for paid */}
-            {contractor.website && (
+            {/* Phone: shown for active, hidden for inactive */}
+            {isActive && (
+              <div className="flex justify-between px-4 py-3">
+                <dt className="font-medium text-gray-800">Phone</dt>
+                <dd className="text-gray-700">{contractor.phone}</dd>
+              </div>
+            )}
+            {/* Website: linked for paid, placeholder for free, hidden for inactive */}
+            {isActive && contractor.website && (
               <div className="flex justify-between px-4 py-3">
                 <dt className="font-medium text-gray-800">Website</dt>
                 <dd>
@@ -717,15 +751,15 @@ function ContractorProfilePage({
             <div className="flex justify-between px-4 py-3">
               <dt className="font-medium text-gray-800">Listing</dt>
               <dd className="text-gray-700 capitalize">
-                {contractor.membershipStatus}
+                {isActive ? contractor.membershipStatus : "Inactive"}
               </dd>
             </div>
           </dl>
         </div>
       </section>
 
-      {/* ── Reviews ── */}
-      {reviews.length > 0 && (
+      {/* ── Reviews (active only — reviews are discovery value) ── */}
+      {isActive && reviews.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-bold text-gray-900">
             Reviews ({reviews.length})
@@ -765,8 +799,8 @@ function ContractorProfilePage({
         </section>
       )}
 
-      {/* ── Completed Projects ── */}
-      {projects.length > 0 && (
+      {/* ── Completed Projects (active only) ── */}
+      {isActive && projects.length > 0 && (
         <section className="mt-8">
           <h2 className="text-xl font-bold text-gray-900">
             Completed Projects
@@ -851,12 +885,13 @@ function ContractorProfilePage({
         ) : (
           <>
             <h2 className="text-xl font-bold text-gray-900">
-              Looking for a {trade.name} in{" "}
-              {serviceCities.map((c) => c!.name).join(" or ")}?
+              {isActive
+                ? `Looking for a ${trade.name} in ${allCities.map((c) => c!.name).join(" or ")}?`
+                : `Find Active ${trade.namePlural} in Gold Country`}
             </h2>
             <p className="mx-auto mt-2 max-w-md text-sm text-gray-700/70">
-              Browse more {trade.namePlural.toLowerCase()} on
-              GoldCountry.guide to compare options and read reviews.
+              Browse {trade.namePlural.toLowerCase()} on GoldCountry.guide to
+              compare options and read reviews.
             </p>
             <Link
               href={`/${trade.slug}`}
@@ -868,8 +903,8 @@ function ContractorProfilePage({
         )}
       </section>
 
-      {/* ── Cross-links ── */}
-      <section className="mt-10">
+      {/* ── Cross-links (active only) ── */}
+      {isActive && <section className="mt-10">
         <h2 className="text-lg font-bold text-gray-900">
           More {trade.namePlural} in Gold Country
         </h2>
@@ -884,7 +919,7 @@ function ContractorProfilePage({
             </Link>
           ))}
         </div>
-      </section>
+      </section>}
     </div>
   );
 }

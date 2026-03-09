@@ -16,11 +16,17 @@ export interface Trade {
 
 export type MembershipStatus = "free" | "premium" | "featured";
 
+export interface CityCoverage {
+  citySlug: string;
+  active: boolean; // false = purchased but paused/expired
+}
+
 export interface Contractor {
   slug: string;
   name: string;
   tradeSlug: string;
-  citySlugs: string[];
+  primaryCitySlug: string;             // included with base membership
+  additionalCities: CityCoverage[];    // purchased add-ons
   phone: string;
   website?: string;
   description: string;
@@ -29,7 +35,7 @@ export interface Contractor {
   licensed: boolean;
   licenseNumber?: string;
   membershipStatus: MembershipStatus;
-  active: boolean;
+  active: boolean;                     // false = membership lapsed
   featuredProjectSlugs?: string[];
 }
 

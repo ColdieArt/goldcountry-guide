@@ -8,6 +8,7 @@ import {
   getContractorsByCity,
   getContractorsByTrade,
   getContractorsByTradeAndCity,
+  getActiveCitySlugs,
 } from "@/data/contractors";
 import { getAverageRating, getReviewCount } from "@/data/reviews";
 import { getCostGuidesByTrade } from "@/data/cost-guides";
@@ -558,7 +559,7 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
               {contractors.map((c) => {
                 const avg = getAverageRating(c.slug);
                 const reviewCount = getReviewCount(c.slug);
-                const serviceCities = c.citySlugs
+                const serviceCities = getActiveCitySlugs(c)
                   .map((s) => getCityBySlug(s))
                   .filter(Boolean);
                 return (
