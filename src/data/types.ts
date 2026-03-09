@@ -54,6 +54,13 @@ export interface Review {
 
 // ─── Cost Guides ────────────────────────────────────────────────
 
+export interface CostTier {
+  label: string;         // e.g. "Basic", "Mid-Range", "High-End"
+  lowPrice: number;
+  highPrice: number;
+  description: string;   // what's included at this tier
+}
+
 export interface CostGuide {
   slug: string;
   title: string;
@@ -61,8 +68,10 @@ export interface CostGuide {
   description: string;
   lowEstimate: number;
   highEstimate: number;
+  costTiers: CostTier[];           // breakdown by project scope
   factors: string[];
-  lastUpdated: string; // ISO date string
+  localContext: string;            // Gold Country-specific pricing note
+  lastUpdated: string;             // ISO date string
 }
 
 // ─── Projects (completed work showcases) ────────────────────────
