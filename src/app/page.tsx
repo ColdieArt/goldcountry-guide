@@ -1,21 +1,60 @@
+import Link from "next/link";
+import { trades } from "@/data/trades";
+import { cities } from "@/data/cities";
+
 export default function Home() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-amber-50 to-yellow-100 dark:from-zinc-900 dark:to-zinc-800">
-      <main className="flex flex-col items-center gap-8 px-6 text-center">
-        <h1 className="text-6xl font-bold tracking-tight text-amber-900 dark:text-amber-400">
-          Gold Country Guide
+    <div>
+      {/* Hero */}
+      <section className="bg-gradient-to-b from-amber-50 to-white px-4 py-20 text-center">
+        <h1 className="text-4xl font-bold tracking-tight text-amber-900 sm:text-5xl">
+          Find Trusted Contractors in Gold Country
         </h1>
-        <p className="max-w-lg text-xl text-amber-800/80 dark:text-amber-300/70">
-          Your guide to California&apos;s historic Gold Country — trails, towns,
-          and treasures worth discovering.
+        <p className="mx-auto mt-4 max-w-xl text-lg text-amber-800/70">
+          Connect with licensed, local professionals in Auburn and the Sierra
+          foothills. Get quotes for your next home project.
         </p>
-        <div className="mt-4 rounded-full bg-amber-700 px-8 py-3 text-lg font-semibold text-white shadow-lg">
-          Coming Soon
+      </section>
+
+      {/* Trades grid */}
+      <section className="mx-auto max-w-6xl px-4 py-16">
+        <h2 className="text-2xl font-bold text-amber-900">Browse by Trade</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {trades.map((trade) => (
+            <Link
+              key={trade.slug}
+              href={`/${trade.slug}`}
+              className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+            >
+              <h3 className="font-semibold text-amber-900">
+                {trade.namePlural}
+              </h3>
+              <p className="mt-1 text-sm text-amber-700/70">
+                {trade.description}
+              </p>
+            </Link>
+          ))}
         </div>
-        <p className="mt-8 text-sm text-amber-700/50 dark:text-amber-400/40">
-          goldcountry.guide
-        </p>
-      </main>
+      </section>
+
+      {/* Cities grid */}
+      <section className="mx-auto max-w-6xl px-4 pb-16">
+        <h2 className="text-2xl font-bold text-amber-900">Browse by City</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cities.map((city) => (
+            <Link
+              key={city.slug}
+              href={`/${city.slug}`}
+              className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+            >
+              <h3 className="font-semibold text-amber-900">{city.name}</h3>
+              <p className="mt-1 text-sm text-amber-700/70">
+                {city.county} County
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

@@ -1,20 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Gold Country Guide",
-  description: "Your guide to California's historic Gold Country",
+  title: {
+    default: "GoldCountry.guide — Find Trusted Local Contractors",
+    template: "%s | GoldCountry.guide",
+  },
+  description:
+    "Find trusted local contractors in Auburn, Grass Valley, Nevada City, and the Sierra foothills. Get quotes for electricians, plumbers, roofers, and more.",
 };
 
 export default function RootLayout({
@@ -24,10 +19,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className="antialiased">
+        <Header />
+        <main className="min-h-screen">{children}</main>
+        <Footer />
       </body>
     </html>
   );
