@@ -12,7 +12,7 @@ import {
 import { getAverageRating, getReviewCount } from "@/data/reviews";
 import { getCostGuidesByTrade } from "@/data/cost-guides";
 import { costGuides } from "@/data/cost-guides";
-import { getProjectsByCity } from "@/data/projects";
+import { getProjectsByCity, getProjectsByTrade } from "@/data/projects";
 
 export function generateStaticParams() {
   return [
@@ -396,114 +396,293 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
   const trade = getTradeBySlug(tradeSlug)!;
   const contractors = getContractorsByTrade(trade.slug);
   const guides = getCostGuidesByTrade(trade.slug);
+  const projects = getProjectsByTrade(trade.slug);
+
+  // Aggregate unique specialties across all contractors in this trade
+  const allSpecialties = Array.from(
+    new Set(contractors.flatMap((c) => c.specialties))
+  );
+
+  // Count total cities served
+  const citiesWithContractors = cities.filter(
+    (city) => getContractorsByTradeAndCity(trade.slug, city.slug).length > 0
+  );
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="text-3xl font-bold text-amber-900">
-        {trade.namePlural} in Gold Country
-      </h1>
-      <p className="mt-3 max-w-2xl text-amber-700/70">{trade.description}</p>
-
-      {/* Trade + city grid */}
-      <section className="mt-12">
-        <h2 className="text-xl font-bold text-amber-900">
-          {trade.namePlural} by City
-        </h2>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {cities.map((city) => {
-            const count = getContractorsByTradeAndCity(trade.slug, city.slug).length;
-            return (
-              <Link
-                key={city.slug}
-                href={`/${trade.slug}/${city.slug}`}
-                className="rounded-lg border border-amber-200 p-4 transition-colors hover:border-amber-400 hover:bg-amber-50"
-              >
-                <span className="font-medium text-amber-900">
-                  {trade.namePlural} in {city.name}
-                </span>
-                <span className="ml-2 text-sm text-amber-700/60">
-                  {count > 0 ? `(${count})` : ""}
-                </span>
-              </Link>
-            );
-          })}
+    <div>
+      {/* ── Hero ────────────────────────────────────────────────────── */}
+      <section className="bg-gradient-to-b from-amber-50 to-white px-4 py-16 text-center">
+        <p className="text-sm font-medium uppercase tracking-wide text-amber-700/60">
+          Gold Country &amp; Sierra Foothills
+        </p>
+        <h1 className="mt-2 text-4xl font-bold tracking-tight text-amber-900 sm:text-5xl">
+          {trade.namePlural} in Gold Country
+        </h1>
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-amber-800/70">
+          {trade.description}
+        </p>
+        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-amber-700/60">
+          <span>
+            {contractors.length} contractor{contractors.length !== 1 && "s"}
+          </span>
+          <span className="text-amber-300">|</span>
+          <span>
+            {citiesWithContractors.length} of {cities.length} cities served
+          </span>
+          {guides.length > 0 && (
+            <>
+              <span className="text-amber-300">|</span>
+              <span>
+                {guides.length} cost {guides.length === 1 ? "guide" : "guides"}
+              </span>
+            </>
+          )}
         </div>
       </section>
 
-      {/* All contractors in this trade */}
-      {contractors.length > 0 && (
-        <section className="mt-12">
-          <h2 className="text-xl font-bold text-amber-900">
-            All {trade.namePlural}
+      <div className="mx-auto max-w-6xl px-4">
+        {/* ── Find by City ──────────────────────────────────────────── */}
+        <section className="py-12">
+          <h2 className="text-2xl font-bold text-amber-900">
+            Find {trade.namePlural} by City
           </h2>
-          <div className="mt-4 space-y-3">
-            {contractors.map((c) => {
-              const avg = getAverageRating(c.slug);
-              const count = getReviewCount(c.slug);
-              const cityNames = c.citySlugs
-                .map((s) => getCityBySlug(s)?.name)
-                .filter(Boolean)
-                .join(", ");
+          <p className="mt-2 text-amber-700/70">
+            Select your city to see available {trade.namePlural.toLowerCase()} in your area.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {cities.map((city) => {
+              const cityContractors = getContractorsByTradeAndCity(
+                trade.slug,
+                city.slug
+              );
+              const count = cityContractors.length;
               return (
                 <Link
-                  key={c.slug}
-                  href={`/${trade.slug}/${c.slug}`}
-                  className="block rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  key={city.slug}
+                  href={`/${trade.slug}/${city.slug}`}
+                  className="group rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
                 >
                   <div className="flex items-baseline justify-between">
-                    <h3 className="text-lg font-semibold text-amber-900">
-                      {c.name}
+                    <h3 className="font-semibold text-amber-900">
+                      {city.name}
                     </h3>
-                    <div className="flex items-center gap-2">
-                      {c.membershipStatus !== "free" && (
-                        <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 capitalize">
-                          {c.membershipStatus}
-                        </span>
-                      )}
-                      {c.licensed && (
-                        <span className="text-xs font-medium text-green-700">
-                          Licensed
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <p className="mt-1 text-sm text-amber-700/70">
-                    {c.specialties.join(" · ")}
-                  </p>
-                  <p className="mt-2 text-sm text-amber-700/60">
-                    {cityNames} · {c.yearsInBusiness} years
-                    {avg !== null && (
-                      <> · {avg} stars ({count} {count === 1 ? "review" : "reviews"})</>
+                    {count > 0 ? (
+                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                        {count}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-amber-500">Coming soon</span>
                     )}
+                  </div>
+                  <p className="mt-1 text-sm text-amber-700/60">
+                    {city.county} County
                   </p>
+                  {count > 0 && (
+                    <p className="mt-2 text-xs font-medium text-amber-600 opacity-0 transition-opacity group-hover:opacity-100">
+                      View {count} {trade.namePlural.toLowerCase()} &rarr;
+                    </p>
+                  )}
                 </Link>
               );
             })}
           </div>
         </section>
-      )}
 
-      {/* Cost guides for this trade */}
-      {guides.length > 0 && (
-        <section className="mt-12">
-          <h2 className="text-xl font-bold text-amber-900">Cost Guides</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {guides.map((g) => (
+        {/* ── Common Services ───────────────────────────────────────── */}
+        {allSpecialties.length > 0 && (
+          <section className="border-t border-amber-100 py-12">
+            <h2 className="text-2xl font-bold text-amber-900">
+              Common {trade.name} Services
+            </h2>
+            <p className="mt-2 text-amber-700/70">
+              Typical project types handled by {trade.namePlural.toLowerCase()} in the Gold Country area.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {allSpecialties.map((s) => (
+                <span
+                  key={s}
+                  className="rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-medium text-amber-800"
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── Cost Guides ───────────────────────────────────────────── */}
+        {guides.length > 0 && (
+          <section className="border-t border-amber-100 py-12">
+            <h2 className="text-2xl font-bold text-amber-900">
+              How Much Do {trade.name} Services Cost?
+            </h2>
+            <p className="mt-2 text-amber-700/70">
+              Local pricing data to help you budget your next project.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {guides.map((g) => (
+                <Link
+                  key={g.slug}
+                  href={`/cost/${g.slug}`}
+                  className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                >
+                  <h3 className="font-semibold text-amber-900">{g.title}</h3>
+                  <p className="mt-2 text-2xl font-bold text-amber-800">
+                    ${g.lowEstimate.toLocaleString()} &ndash; $
+                    {g.highEstimate.toLocaleString()}
+                  </p>
+                  <ul className="mt-3 space-y-1">
+                    {g.factors.slice(0, 3).map((f) => (
+                      <li
+                        key={f}
+                        className="flex items-start gap-2 text-sm text-amber-700/60"
+                      >
+                        <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ── All Contractors ───────────────────────────────────────── */}
+        {contractors.length > 0 && (
+          <section className="border-t border-amber-100 py-12">
+            <h2 className="text-2xl font-bold text-amber-900">
+              All {trade.namePlural} in Gold Country
+            </h2>
+            <div className="mt-6 space-y-4">
+              {contractors.map((c) => {
+                const avg = getAverageRating(c.slug);
+                const reviewCount = getReviewCount(c.slug);
+                const serviceCities = c.citySlugs
+                  .map((s) => getCityBySlug(s))
+                  .filter(Boolean);
+                return (
+                  <Link
+                    key={c.slug}
+                    href={`/${trade.slug}/${c.slug}`}
+                    className="block rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  >
+                    <div className="flex items-baseline justify-between">
+                      <h3 className="text-lg font-semibold text-amber-900">
+                        {c.name}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        {c.membershipStatus !== "free" && (
+                          <span className="rounded-full bg-amber-200 px-2 py-0.5 text-xs font-medium capitalize text-amber-800">
+                            {c.membershipStatus}
+                          </span>
+                        )}
+                        {c.licensed && (
+                          <span className="text-xs font-medium text-green-700">
+                            Licensed
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="mt-1 text-sm text-amber-700/70">
+                      {c.specialties.join(" · ")}
+                    </p>
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-amber-700/60">
+                      <span>{c.yearsInBusiness} years in business</span>
+                      {avg !== null && (
+                        <span>
+                          {"★".repeat(Math.round(avg))}
+                          {"☆".repeat(5 - Math.round(avg))}{" "}
+                          ({reviewCount})
+                        </span>
+                      )}
+                      <span>
+                        Serves{" "}
+                        {serviceCities.map((city, i) => (
+                          <span key={city!.slug}>
+                            {i > 0 && ", "}
+                            {city!.name}
+                          </span>
+                        ))}
+                      </span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── Recent Projects ───────────────────────────────────────── */}
+        {projects.length > 0 && (
+          <section className="border-t border-amber-100 py-12">
+            <h2 className="text-2xl font-bold text-amber-900">
+              Recent {trade.name} Projects
+            </h2>
+            <p className="mt-2 text-amber-700/70">
+              See completed work from {trade.namePlural.toLowerCase()} in the area.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {projects.map((p) => {
+                const pCity = getCityBySlug(p.citySlug);
+                const pContractor = contractors.find(
+                  (c) => c.slug === p.contractorSlug
+                );
+                return (
+                  <Link
+                    key={p.slug}
+                    href={`/projects/${p.slug}`}
+                    className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                  >
+                    <h3 className="font-semibold text-amber-900">{p.title}</h3>
+                    <p className="mt-1 text-sm text-amber-700/70 line-clamp-2">
+                      {p.description}
+                    </p>
+                    <p className="mt-2 text-sm text-amber-700/60">
+                      {pContractor?.name}
+                      {pCity && <> · {pCity.name}</>}
+                      {" · "}
+                      {p.completedDate}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* ── CTA ───────────────────────────────────────────────────── */}
+        <section className="border-t border-amber-100 py-12 text-center">
+          <h2 className="text-2xl font-bold text-amber-900">
+            Need a {trade.name}?
+          </h2>
+          <p className="mx-auto mt-2 max-w-lg text-amber-700/70">
+            Browse {trade.namePlural.toLowerCase()} by city and request quotes
+            from licensed, local professionals in the Gold Country area.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            {citiesWithContractors.slice(0, 4).map((city) => (
               <Link
-                key={g.slug}
-                href={`/cost/${g.slug}`}
-                className="rounded-lg border border-amber-200 p-5 transition-colors hover:border-amber-400 hover:bg-amber-50"
+                key={city.slug}
+                href={`/${trade.slug}/${city.slug}`}
+                className="rounded-lg bg-amber-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-amber-800"
               >
-                <h3 className="font-semibold text-amber-900">{g.title}</h3>
-                <p className="mt-1 text-lg font-bold text-amber-800">
-                  ${g.lowEstimate.toLocaleString()} &ndash; $
-                  {g.highEstimate.toLocaleString()}
-                </p>
+                {trade.namePlural} in {city.name}
               </Link>
             ))}
           </div>
+          <p className="mt-4 text-sm text-amber-700/50">
+            Or browse{" "}
+            <Link href="/" className="underline hover:text-amber-700">
+              all trades
+            </Link>{" "}
+            and{" "}
+            <Link href="/" className="underline hover:text-amber-700">
+              all cities
+            </Link>
+          </p>
         </section>
-      )}
+      </div>
     </div>
   );
 }
