@@ -2,6 +2,7 @@ import Link from "next/link";
 import { trades } from "@/data/trades";
 import { cities } from "@/data/cities";
 import { costGuides } from "@/data/cost-guides";
+import { buildingOptions } from "@/data/building-options";
 import { getFeaturedContractors } from "@/data/contractors";
 import { getAverageRating, getReviewCount } from "@/data/reviews";
 
@@ -19,6 +20,32 @@ export default function Home() {
           Connect with licensed, local professionals across the Sierra
           foothills. Browse {trades.length} trades in {cities.length} cities.
         </p>
+      </section>
+
+      {/* Building options callout */}
+      <section className="mx-auto max-w-6xl px-4 -mt-6">
+        <div className="rounded-xl border-2 border-amber-300 bg-amber-50 p-6 shadow-sm">
+          <h2 className="text-center text-xl font-bold text-gray-900">
+            What Are You Building?
+          </h2>
+          <p className="mt-1 text-center text-sm text-gray-700/70">
+            Tell us about your project and we&apos;ll match you with the right trades.
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {buildingOptions.map((option) => (
+              <Link
+                key={option.slug}
+                href={`/${option.slug}`}
+                className="rounded-lg border border-amber-200 bg-white p-4 text-center transition-colors hover:border-amber-400 hover:bg-amber-50"
+              >
+                <h3 className="font-semibold text-gray-900">{option.name}</h3>
+                <p className="mt-1 text-xs text-gray-700/70">
+                  {option.description}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Featured contractors */}
