@@ -50,6 +50,13 @@ export const trades: Trade[] = [
     description:
       "Concrete specialists for driveways, patios, foundations, retaining walls, and decorative concrete.",
   },
+  {
+    slug: "architects",
+    name: "Architect",
+    namePlural: "Architects",
+    description:
+      "Licensed architects for residential design, remodel planning, blueprints, and permitting assistance.",
+  },
 ];
 
 export function getTradeBySlug(slug: string): Trade | undefined {

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const navTrades = [
   { slug: "general-contractors", label: "General Contractors" },
+  { slug: "architects", label: "Architects" },
   { slug: "tree-service", label: "Tree Services" },
   { slug: "concrete-contractors", label: "Concrete" },
 ];
