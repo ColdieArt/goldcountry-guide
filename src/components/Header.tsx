@@ -1,6 +1,10 @@
 import Link from "next/link";
-import { trades } from "@/data/trades";
-import { cities } from "@/data/cities";
+
+const navTrades = [
+  { slug: "general-contractors", label: "General Contractors" },
+  { slug: "tree-service", label: "Tree Services" },
+  { slug: "concrete-contractors", label: "Concrete" },
+];
 
 export default function Header() {
   return (
@@ -13,22 +17,13 @@ export default function Header() {
           GoldCountry.guide
         </Link>
         <nav aria-label="Main navigation" className="flex items-center gap-6 text-sm font-medium text-gray-800">
-          {cities.slice(0, 3).map((city) => (
-            <Link
-              key={city.slug}
-              href={`/${city.slug}`}
-              className="hidden hover:text-gray-600 md:block"
-            >
-              {city.name}
-            </Link>
-          ))}
-          {trades.slice(0, 3).map((trade) => (
+          {navTrades.map((trade) => (
             <Link
               key={trade.slug}
               href={`/${trade.slug}`}
               className="hidden hover:text-gray-600 sm:block"
             >
-              {trade.namePlural}
+              {trade.label}
             </Link>
           ))}
         </nav>
