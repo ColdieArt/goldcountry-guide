@@ -19,15 +19,16 @@ export function generateStaticParams() {
   ];
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const city = getCityBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const city = getCityBySlug(slug);
   if (city) {
     return {
       title: `Home Services in ${city.name}, CA`,
       description: `Find trusted contractors in ${city.name}, ${city.county} County. Browse electricians, plumbers, roofers, and more.`,
     };
   }
-  const trade = getTradeBySlug(params.slug);
+  const trade = getTradeBySlug(slug);
   if (trade) {
     return {
       title: `${trade.namePlural} in Gold Country`,
@@ -37,11 +38,12 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   return {};
 }
 
-export default function SlugPage({ params }: { params: { slug: string } }) {
-  const city = getCityBySlug(params.slug);
+export default async function SlugPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const city = getCityBySlug(slug);
   if (city) return <CityPage citySlug={city.slug} />;
 
-  const trade = getTradeBySlug(params.slug);
+  const trade = getTradeBySlug(slug);
   if (trade) return <TradePage tradeSlug={trade.slug} />;
 
   notFound();

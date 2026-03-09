@@ -13,8 +13,9 @@ export function generateStaticParams() {
   return getAllCostGuideSlugs().map((slug) => ({ slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const guide = getCostGuideBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const guide = getCostGuideBySlug(slug);
   if (!guide) return {};
   return {
     title: `${guide.title} in Gold Country (2025)`,
@@ -22,12 +23,13 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-export default function CostGuidePage({
+export default async function CostGuidePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const guide = getCostGuideBySlug(params.slug);
+  const { slug } = await params;
+  const guide = getCostGuideBySlug(slug);
   if (!guide) notFound();
 
   const trade = getTradeBySlug(guide.tradeSlug);

@@ -27,15 +27,16 @@ export function generateStaticParams() {
   return params;
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
-  params: { slug: string; subSlug: string };
+  params: Promise<{ slug: string; subSlug: string }>;
 }) {
-  const trade = getTradeBySlug(params.slug);
+  const { slug, subSlug } = await params;
+  const trade = getTradeBySlug(slug);
   if (!trade) return {};
 
-  const city = getCityBySlug(params.subSlug);
+  const city = getCityBySlug(subSlug);
   if (city) {
     return {
       title: `${trade.namePlural} in ${city.name}, CA`,
@@ -43,7 +44,7 @@ export function generateMetadata({
     };
   }
 
-  const contractor = getContractorBySlug(params.subSlug);
+  const contractor = getContractorBySlug(subSlug);
   if (contractor && contractor.tradeSlug === trade.slug) {
     const cityNames = contractor.citySlugs
       .map((s) => getCityBySlug(s)?.name)
@@ -58,19 +59,20 @@ export function generateMetadata({
   return {};
 }
 
-export default function SubSlugPage({
+export default async function SubSlugPage({
   params,
 }: {
-  params: { slug: string; subSlug: string };
+  params: Promise<{ slug: string; subSlug: string }>;
 }) {
-  const trade = getTradeBySlug(params.slug);
+  const { slug, subSlug } = await params;
+  const trade = getTradeBySlug(slug);
   if (!trade) notFound();
 
-  const city = getCityBySlug(params.subSlug);
+  const city = getCityBySlug(subSlug);
   if (city)
     return <TradeCityPage tradeSlug={trade.slug} citySlug={city.slug} />;
 
-  const contractor = getContractorBySlug(params.subSlug);
+  const contractor = getContractorBySlug(subSlug);
   if (contractor && contractor.tradeSlug === trade.slug) {
     return (
       <ContractorProfilePage
