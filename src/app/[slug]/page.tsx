@@ -14,6 +14,7 @@ import { getAverageRating, getReviewCount } from "@/data/reviews";
 import { getCostGuidesByTrade } from "@/data/cost-guides";
 import { costGuides } from "@/data/cost-guides";
 import { getProjectsByCity, getProjectsByTrade } from "@/data/projects";
+import GoldCountryMapWrapper from "@/components/GoldCountryMapWrapper";
 
 export function generateStaticParams() {
   return [
@@ -76,25 +77,32 @@ function CityPage({ citySlug }: { citySlug: string }) {
   return (
     <div>
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-16 text-center">
-        <nav className="flex items-center justify-center gap-1 text-sm text-gray-700/60">
-          <Link href="/" className="hover:text-gray-700">Home</Link>
-          <span>/</span>
-          <span>{city.name}</span>
-        </nav>
-        <p className="mt-3 text-sm font-medium uppercase tracking-wide text-gray-700/60">
-          {city.county} County, California
-        </p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Home Services in {city.name}
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-800/70">
-          {city.description}
-        </p>
-        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-700/60">
-          <span>{allContractors.length} active contractor{allContractors.length !== 1 && "s"}</span>
-          <span className="text-gray-300">|</span>
-          <span>{trades.length} service categories</span>
+      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-16">
+        <div className="mx-auto flex max-w-6xl items-stretch gap-6">
+          <div className="flex flex-1 flex-col justify-center text-center">
+            <nav className="flex items-center justify-center gap-1 text-sm text-gray-700/60">
+              <Link href="/" className="hover:text-gray-700">Home</Link>
+              <span>/</span>
+              <span>{city.name}</span>
+            </nav>
+            <p className="mt-3 text-sm font-medium uppercase tracking-wide text-gray-700/60">
+              {city.county} County, California
+            </p>
+            <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              Home Services in {city.name}
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-800/70">
+              {city.description}
+            </p>
+            <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-700/60">
+              <span>{allContractors.length} active contractor{allContractors.length !== 1 && "s"}</span>
+              <span className="text-gray-300">|</span>
+              <span>{trades.length} service categories</span>
+            </div>
+          </div>
+          <div className="hidden w-[30%] flex-shrink-0 lg:block">
+            <GoldCountryMapWrapper focusCitySlug={city.slug} />
+          </div>
         </div>
       </section>
 

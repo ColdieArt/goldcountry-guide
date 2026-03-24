@@ -11,6 +11,10 @@ const GoldCountryMap = dynamic(() => import("./GoldCountryMap"), {
   ),
 });
 
-export default function GoldCountryMapWrapper() {
-  return <GoldCountryMap />;
+interface GoldCountryMapWrapperProps {
+  focusCitySlug?: string;
+}
+
+export default function GoldCountryMapWrapper({ focusCitySlug }: GoldCountryMapWrapperProps) {
+  return <GoldCountryMap focusCitySlug={focusCitySlug} />;
 }

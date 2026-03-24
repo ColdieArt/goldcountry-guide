@@ -104,16 +104,26 @@ function offsetForContractor(name: string, citySlug: string, index: number): { l
   return { lat: latOff, lng: lngOff };
 }
 
-export default function GoldCountryMap() {
+interface GoldCountryMapProps {
+  focusCitySlug?: string;
+}
+
+export default function GoldCountryMap({ focusCitySlug }: GoldCountryMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
 
   useEffect(() => {
     if (!mapRef.current || mapInstance.current) return;
 
+    const focusCity = focusCitySlug ? CITY_COORDS[focusCitySlug] : null;
+    const mapCenter = focusCity
+      ? [focusCity.lat, focusCity.lng] as [number, number]
+      : [CENTER.lat, CENTER.lng] as [number, number];
+    const mapZoom = focusCity ? 13 : 10;
+
     const map = L.map(mapRef.current, {
-      center: [CENTER.lat, CENTER.lng],
-      zoom: 10,
+      center: mapCenter,
+      zoom: mapZoom,
       scrollWheelZoom: false,
     });
 
@@ -136,10 +146,17 @@ export default function GoldCountryMap() {
         .bindPopup(`<strong>${city.name}</strong>`);
     });
 
+    // Filter contractors for city-specific pages
+    const visibleContractors = focusCitySlug
+      ? CONTRACTORS.filter(
+          (c) => c.primaryCity === focusCitySlug || c.additionalCities.includes(focusCitySlug)
+        )
+      : CONTRACTORS;
+
     // Contractor pins scattered near their primary city
     const cityIndexes: Record<string, number> = {};
 
-    CONTRACTORS.forEach((c) => {
+    visibleContractors.forEach((c) => {
       const city = CITY_COORDS[c.primaryCity];
       if (!city) return;
 
@@ -175,7 +192,7 @@ export default function GoldCountryMap() {
       map.remove();
       mapInstance.current = null;
     };
-  }, []);
+  }, [focusCitySlug]);
 
   return (
     <div className="relative h-full w-full">
