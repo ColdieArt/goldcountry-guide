@@ -19,17 +19,20 @@ export default function Header() {
       <div className="bg-yellow-600 text-white">
         <nav
           aria-label="Browse by city"
-          className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-4 py-1.5 text-xs font-medium"
+          className="mx-auto flex w-4/5 items-center justify-center py-2 text-sm font-medium"
         >
-          <span className="mr-2 shrink-0 text-yellow-200">Your city:</span>
-          {cities.map((city) => (
-            <Link
-              key={city.slug}
-              href={`/${city.slug}`}
-              className="shrink-0 rounded px-2 py-0.5 transition-colors hover:bg-yellow-500"
-            >
-              {city.name}
-            </Link>
+          {cities.map((city, i) => (
+            <span key={city.slug} className="flex items-center">
+              {i > 0 && (
+                <span className="mx-2 text-yellow-300">&mdash;</span>
+              )}
+              <Link
+                href={`/${city.slug}`}
+                className="rounded px-2 py-0.5 transition-colors hover:bg-yellow-500"
+              >
+                {city.name}
+              </Link>
+            </span>
           ))}
         </nav>
       </div>
