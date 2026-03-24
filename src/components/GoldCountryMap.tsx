@@ -89,7 +89,7 @@ const CONTRACTORS: MapContractor[] = [
   { name: "Grass Valley Design-Build", tradeSlug: "architects", primaryCity: "grass-valley", additionalCities: ["nevada-city", "auburn"] },
 ];
 
-const CENTER = { lat: 39.0, lng: -121.14 };
+const CENTER = { lat: 38.7908, lng: -121.2358 }; // Rocklin, CA
 
 // Deterministic pseudo-random offset so each contractor gets a unique but stable position near its city
 function offsetForContractor(name: string, citySlug: string, index: number): { lat: number; lng: number } {
