@@ -3,9 +3,9 @@ import { cities } from "@/data/cities";
 import RequestForm from "@/components/RequestForm";
 
 export const metadata = {
-  title: "Request a Project Quote",
+  title: "Get Free Quotes from Trusted Local Contractors",
   description:
-    "Tell us about your project and we'll connect you with trusted local contractors in Gold Country.",
+    "Tell us about your project and we'll connect you with 2-3 qualified local contractors in Gold Country — free, no obligation.",
 };
 
 export default async function RequestPage({
@@ -23,22 +23,25 @@ export default async function RequestPage({
   };
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-        Request a Project Quote
-      </h1>
-      <p className="mt-3 text-gray-700/70">
-        Tell us about your project and we&apos;ll match you with qualified
-        local contractors in Gold Country.
-      </p>
-
-      <div className="mt-8">
-        <RequestForm
-          trades={trades.map((t) => ({ slug: t.slug, name: t.name }))}
-          cities={cities.map((c) => ({ slug: c.slug, name: c.name }))}
-          prefill={prefill}
-        />
+    <div className="mx-auto max-w-3xl px-4 py-12">
+      <div className="mb-8 text-center">
+        <p className="text-sm font-medium uppercase tracking-wide text-amber-600">
+          Free &amp; No Obligation
+        </p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Find Your Perfect Contractor
+        </h1>
+        <p className="mx-auto mt-3 max-w-lg text-gray-600">
+          Tell us about your project and we&apos;ll connect you with 2–3
+          trusted, licensed pros in Gold Country.
+        </p>
       </div>
+
+      <RequestForm
+        trades={trades.map((t) => ({ slug: t.slug, name: t.name }))}
+        cities={cities.map((c) => ({ slug: c.slug, name: c.name }))}
+        prefill={prefill}
+      />
     </div>
   );
 }
