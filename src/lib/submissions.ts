@@ -35,49 +35,17 @@ export interface SubmissionResult {
 export async function submitProjectRequest(
   data: ProjectRequest
 ): Promise<SubmissionResult> {
-  // ── Mock handler ──────────────────────────────────────────────
-  // Simulates a short network delay, logs, returns a fake ID.
-  // Replace this body with real backend integration.
-  await new Promise((resolve) => setTimeout(resolve, 600));
+  const res = await fetch("/api/submit-request", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
 
-  // In production, validate server-side here before persisting.
-  console.log("[submission]", JSON.stringify(data, null, 2));
+  const result = await res.json();
 
-  // ── Lead routing ────────────────────────────────────────────────
-  // Match this request against eligible contractors.
-  // In production, this would trigger notifications / queue entries.
-  const { routeLead } = await import("@/lib/lead-routing");
-  const { contractors } = await import("@/data/contractors");
-
-  const matches = routeLead(
-    {
-      tradeSlug: data.trade,
-      citySlug: data.city,
-      budgetValue: data.budget,
-      submittedAt: data.submittedAt,
-    },
-    contractors
-  );
-
-  console.log(
-    "[lead-routing] %d match(es) for %s in %s (budget: %s)",
-    matches.length,
-    data.trade,
-    data.city,
-    data.budget || "unsure"
-  );
-  for (const m of matches) {
-    console.log(
-      "  → %s | score: %d | premium: %s | early-access: %s",
-      m.contractor.name,
-      m.score,
-      m.premiumLevel,
-      m.earlyAccess
-    );
+  if (!res.ok || !result.success) {
+    return { success: false, error: result.error || "Submission failed" };
   }
 
-  return {
-    success: true,
-    id: `req-${Date.now()}`,
-  };
+  return { success: true, id: result.id };
 }
