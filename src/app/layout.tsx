@@ -27,7 +27,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         <Header />
-        <main id="main-content" className="min-h-screen">{children}</main>
+        <main id="main-content" className="gold-ripple min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>
