@@ -5,6 +5,7 @@ import { costGuides } from "@/data/cost-guides";
 import { buildingOptions } from "@/data/building-options";
 import { getFeaturedContractors } from "@/data/contractors";
 import { getAverageRating, getReviewCount } from "@/data/reviews";
+import GoldCountryMapWrapper from "@/components/GoldCountryMapWrapper";
 
 export default function Home() {
   const featured = getFeaturedContractors();
@@ -12,17 +13,24 @@ export default function Home() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-20 text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Find Trusted Contractors in Gold Country
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl text-lg font-medium text-yellow-700">
-          Keep the money local.
-        </p>
-        <p className="mx-auto mt-2 max-w-xl text-base text-gray-800/70">
-          Hire licensed, local professionals who live and work in your community.
-          Browse {trades.length} trades across {cities.length} foothill cities.
-        </p>
+      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-20">
+        <div className="mx-auto flex max-w-6xl items-stretch gap-6">
+          <div className="flex flex-1 flex-col justify-center text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              Find Trusted Contractors in Gold Country
+            </h1>
+            <p className="mx-auto mt-3 max-w-xl text-lg font-medium text-yellow-700">
+              Keep the money local.
+            </p>
+            <p className="mx-auto mt-2 max-w-xl text-base text-gray-800/70">
+              Hire licensed, local professionals who live and work in your community.
+              Browse {trades.length} trades across {cities.length} foothill cities.
+            </p>
+          </div>
+          <div className="hidden w-[30%] flex-shrink-0 lg:block">
+            <GoldCountryMapWrapper />
+          </div>
+        </div>
       </section>
 
       {/* Building options callout */}
