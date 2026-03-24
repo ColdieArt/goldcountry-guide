@@ -6,6 +6,7 @@ import { buildingOptions } from "@/data/building-options";
 import { getFeaturedContractors } from "@/data/contractors";
 import { getAverageRating, getReviewCount } from "@/data/reviews";
 import GoldCountryMapWrapper from "@/components/GoldCountryMapWrapper";
+import HeroLeadCapture from "@/components/HeroLeadCapture";
 
 export default function Home() {
   const featured = getFeaturedContractors();
@@ -26,6 +27,7 @@ export default function Home() {
               Hire licensed, local professionals who live and work in your community.
               Browse {trades.length} trades across {cities.length} foothill cities.
             </p>
+            <HeroLeadCapture />
           </div>
           <div className="hidden w-[30%] flex-shrink-0 lg:block">
             <GoldCountryMapWrapper />
