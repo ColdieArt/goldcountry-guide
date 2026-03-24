@@ -16,9 +16,12 @@ export default function Home() {
         <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           Find Trusted Contractors in Gold Country
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-gray-800/70">
-          Connect with licensed, local professionals across the Sierra
-          foothills. Browse {trades.length} trades in {cities.length} cities.
+        <p className="mx-auto mt-3 max-w-xl text-lg font-medium text-yellow-700">
+          Keep the money local.
+        </p>
+        <p className="mx-auto mt-2 max-w-xl text-base text-gray-800/70">
+          Hire licensed, local professionals who live and work in your community.
+          Browse {trades.length} trades across {cities.length} foothill cities.
         </p>
       </section>
 
