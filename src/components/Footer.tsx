@@ -45,8 +45,8 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t border-gray-200 pt-6 text-center text-xs text-gray-700/50">
-          &copy; {new Date().getFullYear()} GoldCountry.guide. All rights
-          reserved.
+          <p>&copy; {new Date().getFullYear()} GoldCountry.guide. All rights reserved.</p>
+          <p className="mt-1">Serving California&apos;s Gold Country since 2024.</p>
         </div>
       </div>
     </footer>
