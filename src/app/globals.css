@@ -85,3 +85,14 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Hide root layout chrome when v2 homepage is active */
+body:has(.v2-page) > header {
+  display: none !important;
+}
+body:has(.v2-page) > footer {
+  display: none !important;
+}
+body:has(.v2-page) > main.gold-ripple::after {
+  display: none;
+}
