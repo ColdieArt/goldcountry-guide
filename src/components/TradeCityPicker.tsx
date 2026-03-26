@@ -43,50 +43,46 @@ export default function TradeCityPicker({
 
   return (
     <div>
-      {/* ── City Selection CTA ─────────────────────────────────── */}
-      <div className="rounded-xl border-2 border-amber-400/60 bg-amber-50/50 p-6 sm:p-8">
-        <h2 className="text-center text-2xl font-bold text-gray-900">
-          Where do you need a {tradeName.toLowerCase()}?
-        </h2>
-        <p className="mt-2 text-center text-gray-700/70">
-          Select your town to see available {tradeNamePlural.toLowerCase()}.
-        </p>
+      {/* ── City Selection CTA + Image ────────────────────────── */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border-2 border-amber-400/60 bg-amber-50/50 p-6 sm:p-8">
+          <h2 className="text-center text-2xl font-bold text-gray-900">
+            Where do you need a {tradeName.toLowerCase()}?
+          </h2>
 
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          {cities.map((city) => {
-            const isSelected = selectedCity === city.slug;
-            const hasContractors = city.contractorCount > 0;
-            return (
-              <button
-                key={city.slug}
-                onClick={() => setSelectedCity(isSelected ? null : city.slug)}
-                disabled={!hasContractors}
-                className={`
-                  rounded-lg px-5 py-3 text-sm font-semibold transition-all
-                  ${isSelected
-                    ? "bg-gray-900 text-white shadow-lg scale-105"
-                    : hasContractors
-                      ? "border border-gray-300 bg-white text-gray-900 hover:border-gray-500 hover:bg-gray-50 hover:shadow"
-                      : "border border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
-                  }
-                `}
-              >
-                {city.name}
-                {hasContractors && (
-                  <span className={`ml-2 text-xs ${isSelected ? "text-gray-300" : "text-gray-500"}`}>
-                    ({city.contractorCount})
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            {cities.map((city) => {
+              const isSelected = selectedCity === city.slug;
+              const hasContractors = city.contractorCount > 0;
+              return (
+                <button
+                  key={city.slug}
+                  onClick={() => setSelectedCity(isSelected ? null : city.slug)}
+                  disabled={!hasContractors}
+                  className={`
+                    rounded-lg px-5 py-3 text-sm font-semibold transition-all
+                    ${isSelected
+                      ? "bg-gray-900 text-white shadow-lg scale-105"
+                      : hasContractors
+                        ? "border border-gray-300 bg-white text-gray-900 hover:border-gray-500 hover:bg-gray-50 hover:shadow"
+                        : "border border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed"
+                    }
+                  `}
+                >
+                  {city.name}
+                  {hasContractors && (
+                    <span className={`ml-2 text-xs ${isSelected ? "text-gray-300" : "text-gray-500"}`}>
+                      ({city.contractorCount})
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {!selectedCity && activeCities.length > 0 && (
-          <p className="mt-4 text-center text-sm text-gray-500">
-            Pick a city above to browse {tradeNamePlural.toLowerCase()}
-          </p>
-        )}
+        {/* Image placeholder */}
+        <div className="hidden rounded-xl bg-gray-200 lg:block" />
       </div>
 
       {/* ── Contractor Results ──────────────────────────────────── */}
