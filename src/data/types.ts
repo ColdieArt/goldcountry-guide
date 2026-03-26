@@ -93,6 +93,25 @@ export interface Project {
   images?: string[]; // future: paths or URLs
 }
 
+// ─── Guides (SEO Articles) ────────────────────────────────────────
+
+export interface GuideSection {
+  heading: string;
+  body: string;
+}
+
+export interface Guide {
+  slug: string;
+  title: string;
+  metaTitle: string;
+  metaDescription: string;
+  tradeSlug: string;
+  citySlug: string;
+  intro: string;
+  sections: GuideSection[];
+  publishedDate: string;
+}
+
 // ─── Lead Routing ────────────────────────────────────────────────
 
 /**
