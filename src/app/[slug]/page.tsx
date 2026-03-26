@@ -525,7 +525,7 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
         {copy && (
           <section className="border-t border-gray-100 py-12">
             <h2 className="text-2xl font-bold text-gray-900">
-              {trade.namePlural} in Gold Country &mdash; What You Should Know
+              {trade.namePlural} in Gold Country - What You Should Know
             </h2>
             <div className="mt-4 max-w-3xl space-y-4 text-gray-700 leading-relaxed">
               <p>{copy.localContext}</p>
