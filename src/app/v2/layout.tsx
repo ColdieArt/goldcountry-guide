@@ -5,6 +5,5 @@ export const metadata = {
 };
 
 export default function V2Layout({ children }: { children: React.ReactNode }) {
-  // Wraps children in a class that hides the root layout's Header/Footer
-  return <div className="v2-page">{children}</div>;
+  return <div className="homepage-standalone">{children}</div>;
 }

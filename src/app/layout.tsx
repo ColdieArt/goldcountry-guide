@@ -5,11 +5,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "GoldCountry.guide — Find Trusted Local Contractors",
+    default: "GoldCountry.guide - Vetted Local Contractors in the Sierra Foothills",
     template: "%s | GoldCountry.guide",
   },
   description:
-    "Find trusted local contractors in Auburn, Grass Valley, Nevada City, and the Sierra foothills. Get quotes for electricians, plumbers, roofers, and more.",
+    "Hand-picked contractors vetted by local tradespeople. Electricians, plumbers, roofers, HVAC, and more serving Auburn, Grass Valley, Nevada City, and Gold Country.",
 };
 
 export default function RootLayout({
@@ -18,16 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">
+    <html lang="en" className="dark">
+      <body className="bg-neutral-950 text-neutral-100 antialiased">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-gray-900 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-amber-500 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-neutral-950"
         >
           Skip to main content
         </a>
         <Header />
-        <main id="main-content" className="gold-ripple min-h-screen">{children}</main>
+        <main id="main-content" className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

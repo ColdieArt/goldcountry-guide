@@ -16,19 +16,17 @@ export default function Header() {
   return (
     <header>
       {/* City bar */}
-      <div className="bg-yellow-600 text-white">
+      <div className="border-b border-neutral-800 bg-neutral-950">
         <nav
           aria-label="Browse by city"
-          className="mx-auto flex w-4/5 items-center justify-center py-2 text-sm font-medium"
+          className="mx-auto flex max-w-7xl items-center justify-center gap-1 py-2 text-xs font-medium text-neutral-500"
         >
           {cities.map((city, i) => (
             <span key={city.slug} className="flex items-center">
-              {i > 0 && (
-                <span className="mx-2 text-yellow-300">&mdash;</span>
-              )}
+              {i > 0 && <span className="mx-1.5 text-neutral-700">/</span>}
               <Link
                 href={`/${city.slug}`}
-                className="rounded px-2 py-0.5 transition-colors hover:bg-yellow-500"
+                className="rounded px-1.5 py-0.5 transition-colors hover:text-amber-400"
               >
                 {city.name}
               </Link>
@@ -38,29 +36,29 @@ export default function Header() {
       </div>
 
       {/* Main header */}
-      <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+      <div className="border-b border-neutral-800 bg-neutral-950/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link
             href="/"
-            className="text-xl font-bold tracking-tight text-gray-900"
+            className="text-lg font-bold tracking-tight text-white"
           >
-            GoldCountry.guide
+            GoldCountry<span className="text-amber-400">.guide</span>
           </Link>
-          <nav aria-label="Main navigation" className="flex items-center gap-6 text-sm font-medium text-gray-800">
+          <nav aria-label="Main navigation" className="flex items-center gap-5 text-sm font-medium text-neutral-400">
             {navTrades.map((trade) => (
               <Link
                 key={trade.slug}
                 href={`/${trade.slug}`}
-                className="hidden hover:text-gray-600 sm:block"
+                className="hidden transition-colors hover:text-white lg:block"
               >
                 {trade.label}
               </Link>
             ))}
             <Link
-              href="/guides"
-              className="hidden hover:text-gray-600 sm:block"
+              href="/request"
+              className="rounded-full bg-amber-500 px-4 py-1.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-amber-400"
             >
-              Guides
+              Get Quotes
             </Link>
           </nav>
         </div>

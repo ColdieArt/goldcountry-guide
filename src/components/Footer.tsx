@@ -4,23 +4,27 @@ import { cities } from "@/data/cities";
 
 export default function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gray-50" aria-label="Site footer">
-      <div className="mx-auto max-w-6xl px-4 py-12">
+    <footer className="border-t border-neutral-800 bg-neutral-950" aria-label="Site footer">
+      <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="grid gap-8 sm:grid-cols-3">
           <div>
-            <p className="font-bold text-gray-900">GoldCountry.guide</p>
-            <p className="mt-2 text-sm text-gray-700/70">
-              Helping Sierra foothills homeowners find trusted local contractors.
+            <p className="text-lg font-bold text-white">
+              GoldCountry<span className="text-amber-400">.guide</span>
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-neutral-500">
+              Built by a local. Vetted by the trades.
+              <br />
+              Keeping the money in Gold Country.
             </p>
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900">Trades</p>
-            <ul className="mt-2 space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-widest text-neutral-500">Trades</p>
+            <ul className="mt-3 space-y-1">
               {trades.map((trade) => (
                 <li key={trade.slug}>
                   <Link
                     href={`/${trade.slug}`}
-                    className="text-sm text-gray-700/70 hover:text-gray-700"
+                    className="text-sm text-neutral-400 transition-colors hover:text-white"
                   >
                     {trade.namePlural}
                   </Link>
@@ -29,13 +33,13 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900">Cities</p>
-            <ul className="mt-2 space-y-1">
+            <p className="text-xs font-semibold uppercase tracking-widest text-neutral-500">Communities</p>
+            <ul className="mt-3 space-y-1">
               {cities.map((city) => (
                 <li key={city.slug}>
                   <Link
                     href={`/${city.slug}`}
-                    className="text-sm text-gray-700/70 hover:text-gray-700"
+                    className="text-sm text-neutral-400 transition-colors hover:text-white"
                   >
                     {city.name}
                   </Link>
@@ -44,9 +48,8 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-8 border-t border-gray-200 pt-6 text-center text-xs text-gray-700/50">
+        <div className="mt-10 border-t border-neutral-800 pt-6 text-center text-xs text-neutral-600">
           <p>&copy; {new Date().getFullYear()} GoldCountry.guide. All rights reserved.</p>
-          <p className="mt-1">Serving California&apos;s Gold Country since 2024.</p>
         </div>
       </div>
     </footer>

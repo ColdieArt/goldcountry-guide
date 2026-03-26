@@ -23,25 +23,29 @@ export default async function RequestPage({
   };
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <div className="mb-8 text-center">
-        <p className="text-sm font-medium uppercase tracking-wide text-amber-600">
-          Free &amp; No Obligation
-        </p>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Find Your Perfect Contractor
-        </h1>
-        <p className="mx-auto mt-3 max-w-lg text-gray-600">
-          Tell us about your project and we&apos;ll connect you with 2–3
-          trusted, licensed pros in Gold Country.
-        </p>
-      </div>
+    <div className="min-h-screen bg-neutral-950">
+      <div className="mx-auto max-w-3xl px-4 py-16 sm:py-20">
+        <div className="mb-10 text-center">
+          <p className="text-sm font-medium uppercase tracking-widest text-amber-400">
+            Free &amp; No Obligation
+          </p>
+          <h1 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Find Your Perfect Contractor
+          </h1>
+          <p className="mx-auto mt-4 max-w-lg text-neutral-400 leading-relaxed">
+            Tell us about your project and we&apos;ll connect you with 2–3
+            trusted, licensed pros in Gold Country.
+          </p>
+        </div>
 
-      <RequestForm
-        trades={trades.map((t) => ({ slug: t.slug, name: t.name }))}
-        cities={cities.map((c) => ({ slug: c.slug, name: c.name }))}
-        prefill={prefill}
-      />
+        <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6 sm:p-8">
+          <RequestForm
+            trades={trades.map((t) => ({ slug: t.slug, name: t.name }))}
+            cities={cities.map((c) => ({ slug: c.slug, name: c.name }))}
+            prefill={prefill}
+          />
+        </div>
+      </div>
     </div>
   );
 }

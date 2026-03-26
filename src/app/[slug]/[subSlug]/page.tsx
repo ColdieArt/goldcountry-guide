@@ -19,7 +19,6 @@ import JsonLd from "@/components/JsonLd";
 
 export function generateStaticParams() {
   const params: { slug: string; subSlug: string }[] = [];
-
   for (const tradeSlug of getAllTradeSlugs()) {
     for (const citySlug of getAllCitySlugs()) {
       params.push({ slug: tradeSlug, subSlug: citySlug });
@@ -28,7 +27,6 @@ export function generateStaticParams() {
       params.push({ slug: tradeSlug, subSlug: c.slug });
     }
   }
-
   return params;
 }
 
@@ -40,15 +38,13 @@ export async function generateMetadata({
   const { slug, subSlug } = await params;
   const trade = getTradeBySlug(slug);
   if (!trade) return {};
-
   const city = getCityBySlug(subSlug);
   if (city) {
     return {
-      title: `${trade.namePlural} in ${city.name}, CA — Licensed & Reviewed`,
+      title: `${trade.namePlural} in ${city.name}, CA - Licensed & Reviewed`,
       description: `Find licensed ${trade.namePlural.toLowerCase()} in ${city.name}, ${city.county} County, California. ${trade.description} Read reviews and request free quotes.`,
     };
   }
-
   const contractor = getContractorBySlug(subSlug);
   if (contractor && contractor.tradeSlug === trade.slug) {
     const cityNames = getAllCitySlugsForContractor(contractor)
@@ -56,11 +52,10 @@ export async function generateMetadata({
       .filter(Boolean)
       .join(", ");
     return {
-      title: `${contractor.name} — ${trade.name} in ${cityNames}, CA`,
+      title: `${contractor.name} - ${trade.name} in ${cityNames}, CA`,
       description: `${contractor.name} is a licensed ${trade.name.toLowerCase()} serving ${cityNames}. ${contractor.description.slice(0, 140)}`,
     };
   }
-
   return {};
 }
 
@@ -72,21 +67,12 @@ export default async function SubSlugPage({
   const { slug, subSlug } = await params;
   const trade = getTradeBySlug(slug);
   if (!trade) notFound();
-
   const city = getCityBySlug(subSlug);
-  if (city)
-    return <TradeCityPage tradeSlug={trade.slug} citySlug={city.slug} />;
-
+  if (city) return <TradeCityPage tradeSlug={trade.slug} citySlug={city.slug} />;
   const contractor = getContractorBySlug(subSlug);
   if (contractor && contractor.tradeSlug === trade.slug) {
-    return (
-      <ContractorProfilePage
-        tradeSlug={trade.slug}
-        contractorSlug={contractor.slug}
-      />
-    );
+    return <ContractorProfilePage tradeSlug={trade.slug} contractorSlug={contractor.slug} />;
   }
-
   notFound();
 }
 
@@ -94,39 +80,19 @@ export default async function SubSlugPage({
 /*  Trade + City — e.g. /electricians/auburn                         */
 /* ────────────────────────────────────────────────────────────────── */
 
-function TradeCityPage({
-  tradeSlug,
-  citySlug,
-}: {
-  tradeSlug: string;
-  citySlug: string;
-}) {
+function TradeCityPage({ tradeSlug, citySlug }: { tradeSlug: string; citySlug: string }) {
   const trade = getTradeBySlug(tradeSlug)!;
   const city = getCityBySlug(citySlug)!;
   const contractors = getContractorsByTradeAndCity(trade.slug, city.slug);
   const guides = getCostGuidesByTrade(trade.slug);
-  const projects = getProjectsByCity(city.slug).filter(
-    (p) => p.tradeSlug === trade.slug
-  );
+  const projects = getProjectsByCity(city.slug).filter((p) => p.tradeSlug === trade.slug);
 
-  // Separate featured/premium from free contractors
-  const featured = contractors.filter(
-    (c) => c.membershipStatus === "featured"
-  );
-  const premium = contractors.filter(
-    (c) => c.membershipStatus === "premium"
-  );
+  const featured = contractors.filter((c) => c.membershipStatus === "featured");
+  const premium = contractors.filter((c) => c.membershipStatus === "premium");
   const promoted = [...featured, ...premium];
-  const standard = contractors.filter(
-    (c) => c.membershipStatus === "free"
-  );
+  const standard = contractors.filter((c) => c.membershipStatus === "free");
 
-  // Collect all specialties across contractors for this trade+city
-  const allSpecialties = Array.from(
-    new Set(contractors.flatMap((c) => c.specialties))
-  );
-
-  // Collect all reviews for contractors in this trade+city
+  const allSpecialties = Array.from(new Set(contractors.flatMap((c) => c.specialties)));
   const allReviews = contractors.flatMap((c) =>
     getReviewsByContractor(c.slug).map((r) => ({ ...r, contractorName: c.name, contractorSlug: c.slug }))
   );
@@ -144,381 +110,248 @@ function TradeCityPage({
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <JsonLd data={tradeCityBreadcrumbLd} />
+    <div className="bg-neutral-950">
+      <div className="mx-auto max-w-6xl px-4 py-16">
+        <JsonLd data={tradeCityBreadcrumbLd} />
 
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-gray-700/60">
-        <Link href="/" className="hover:text-gray-700">
-          Home
-        </Link>
-        <span>/</span>
-        <Link href={`/${trade.slug}`} className="hover:text-gray-700">
-          {trade.namePlural}
-        </Link>
-        <span>/</span>
-        <Link href={`/${city.slug}`} className="hover:text-gray-700">
-          {city.name}
-        </Link>
-      </nav>
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-neutral-500">
+          <Link href="/" className="transition-colors hover:text-white">Home</Link>
+          <span>/</span>
+          <Link href={`/${trade.slug}`} className="transition-colors hover:text-white">{trade.namePlural}</Link>
+          <span>/</span>
+          <Link href={`/${city.slug}`} className="transition-colors hover:text-white">{city.name}</Link>
+        </nav>
 
-      {/* Hero */}
-      <div className="mt-4 rounded-lg border border-gray-200 bg-gray-50 px-6 py-10 sm:px-10">
-        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          {trade.namePlural} in {city.name}, CA
-        </h1>
-        <p className="mt-3 max-w-2xl text-gray-700/70">
-          Find licensed {trade.namePlural.toLowerCase()} serving {city.name} and{" "}
-          {city.county} County. Compare local professionals, read reviews, and
-          request quotes.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-700">
-          <span className="font-medium">
-            {contractors.length}{" "}
-            {contractors.length === 1 ? "contractor" : "contractors"} listed
-          </span>
-          {allReviews.length > 0 && (
-            <span className="font-medium">
-              {allReviews.length}{" "}
-              {allReviews.length === 1 ? "review" : "reviews"}
-            </span>
-          )}
-          {guides.length > 0 && (
-            <span className="font-medium">
-              {guides.length} cost {guides.length === 1 ? "guide" : "guides"}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Quick Start — What do you need? */}
-      {allSpecialties.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">
-            Common {trade.name} Services in {city.name}
-          </h2>
-          <p className="mt-2 text-sm text-gray-700/70">
-            Local {trade.namePlural.toLowerCase()} in {city.name} commonly
-            handle these types of projects:
+        {/* Hero */}
+        <div className="mt-6 rounded-2xl border border-neutral-800 bg-neutral-900 px-6 py-10 sm:px-10">
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            {trade.namePlural} in {city.name}, CA
+          </h1>
+          <p className="mt-3 max-w-2xl text-neutral-400">
+            Find licensed {trade.namePlural.toLowerCase()} serving {city.name} and {city.county} County. Compare local professionals, read reviews, and request quotes.
           </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {allSpecialties.map((s) => (
-              <span
-                key={s}
-                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm text-gray-800"
-              >
-                {s}
-              </span>
-            ))}
+          <div className="mt-4 flex flex-wrap gap-4 text-sm text-neutral-500">
+            <span>{contractors.length} {contractors.length === 1 ? "contractor" : "contractors"} listed</span>
+            {allReviews.length > 0 && <span>{allReviews.length} {allReviews.length === 1 ? "review" : "reviews"}</span>}
           </div>
+        </div>
+
+        {/* Common Services */}
+        {allSpecialties.length > 0 && (
+          <section className="mt-12">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Services</p>
+            <h2 className="mt-2 text-xl font-bold text-white">
+              Common {trade.name} Services in {city.name}
+            </h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {allSpecialties.map((s) => (
+                <span key={s} className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-300">
+                  {s}
+                </span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Quick Start */}
+        <section className="mt-12">
+          <QuickStart
+            trade={trade.name}
+            tradePlural={trade.namePlural}
+            city={city.name}
+            projectTypes={Array.from(new Set([...allSpecialties, ...guides.map((g) => g.title)]))}
+          />
         </section>
-      )}
 
-      {/* Guided Quick Start */}
-      <section className="mt-10">
-        <QuickStart
-          trade={trade.name}
-          tradePlural={trade.namePlural}
-          city={city.name}
-          projectTypes={Array.from(
-            new Set([
-              ...allSpecialties,
-              ...guides.map((g) => g.title),
-            ])
-          )}
-        />
-      </section>
-
-      {/* Featured & Premium Contractors */}
-      {promoted.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">
-            Top {trade.namePlural} in {city.name}
-          </h2>
-          <div className="mt-4 space-y-4">
-            {promoted.map((c) => {
-              const avg = getAverageRating(c.slug);
-              const count = getReviewCount(c.slug);
-              return (
-                <Link
-                  key={c.slug}
-                  href={`/${trade.slug}/${c.slug}`}
-                  className="block rounded-lg border-2 border-gray-300 bg-gray-50/50 p-6 transition-colors hover:border-gray-400 hover:bg-gray-50"
-                >
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {c.name}
-                    </h3>
-                    <div className="flex items-center gap-2">
-                      <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-800 capitalize">
-                        {c.membershipStatus}
-                      </span>
-                      {c.licensed && (
-                        <span className="text-xs font-medium text-gray-700">
-                          Licensed
-                        </span>
+        {/* Featured & Premium Contractors */}
+        {promoted.length > 0 && (
+          <section className="mt-12">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Top Rated</p>
+            <h2 className="mt-2 text-xl font-bold text-white">
+              Top {trade.namePlural} in {city.name}
+            </h2>
+            <div className="mt-6 space-y-4">
+              {promoted.map((c) => {
+                const avg = getAverageRating(c.slug);
+                const count = getReviewCount(c.slug);
+                return (
+                  <Link
+                    key={c.slug}
+                    href={`/${trade.slug}/${c.slug}`}
+                    className="group block rounded-2xl border border-amber-500/20 bg-neutral-900 p-6 transition-all hover:border-amber-500/50 hover:shadow-lg hover:shadow-amber-500/5"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-white group-hover:text-amber-400 transition-colors">{c.name}</h3>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-medium capitalize text-amber-400">{c.membershipStatus}</span>
+                        {c.licensed && <span className="text-xs font-medium text-neutral-300">Licensed</span>}
+                      </div>
+                    </div>
+                    <p className="mt-2 text-sm text-neutral-500">{c.specialties.join(" / ")}</p>
+                    <p className="mt-2 text-sm text-neutral-400 leading-relaxed">{c.description}</p>
+                    <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-neutral-500">
+                      <span>{c.yearsInBusiness} yrs</span>
+                      <span>{c.phone}</span>
+                      {avg !== null && (
+                        <span><span className="text-amber-400">{avg}</span> ({count} {count === 1 ? "review" : "reviews"})</span>
                       )}
                     </div>
-                  </div>
-                  <p className="mt-2 text-sm text-gray-700/70">
-                    {c.specialties.join(" · ")}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-gray-700/70">
-                    {c.description}
-                  </p>
-                  <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-700/60">
-                    <span>{c.yearsInBusiness} years in business</span>
-                    <span>·</span>
-                    <span>{c.phone}</span>
-                    {avg !== null && (
-                      <>
-                        <span>·</span>
-                        <span>
-                          {avg} stars ({count}{" "}
-                          {count === 1 ? "review" : "reviews"})
-                        </span>
-                      </>
-                    )}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
 
-      {/* Cost Snapshot */}
-      {guides.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">
-            {trade.name} Costs in {city.name}
-          </h2>
-          <p className="mt-2 text-sm text-gray-700/70">
-            Typical pricing for {trade.name.toLowerCase()} projects in the{" "}
-            {city.name} area.
-          </p>
-          <div className="mt-4 overflow-hidden rounded-lg border border-gray-200">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-200 bg-gray-50">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    Project Type
-                  </th>
-                  <th className="px-4 py-3 text-right font-semibold text-gray-900">
-                    Typical Cost
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {guides.map((g) => (
-                  <tr
-                    key={g.slug}
-                    className="border-b border-gray-100 last:border-0"
-                  >
-                    <td className="px-4 py-3">
-                      <Link
-                        href={`/cost/${g.slug}`}
-                        className="font-medium text-gray-900 underline decoration-gray-300 hover:decoration-gray-500"
-                      >
-                        {g.title}
-                      </Link>
-                    </td>
-                    <td className="px-4 py-3 text-right font-bold text-gray-800">
-                      ${g.lowEstimate.toLocaleString()} &ndash; $
-                      {g.highEstimate.toLocaleString()}
-                    </td>
+        {/* Cost Snapshot */}
+        {guides.length > 0 && (
+          <section className="mt-12">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Budget Planning</p>
+            <h2 className="mt-2 text-xl font-bold text-white">{trade.name} Costs in {city.name}</h2>
+            <div className="mt-6 overflow-hidden rounded-2xl border border-neutral-800">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-neutral-800 bg-neutral-900 text-left text-xs font-medium uppercase tracking-wide text-neutral-500">
+                    <th className="px-5 py-4">Project Type</th>
+                    <th className="px-5 py-4 text-right">Typical Cost</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="mt-2 text-xs text-gray-700/40">
-            Estimates based on typical projects in the Gold Country area.
-            Actual costs vary by project scope and conditions.
-          </p>
-        </section>
-      )}
+                </thead>
+                <tbody className="divide-y divide-neutral-800">
+                  {guides.map((g) => (
+                    <tr key={g.slug} className="transition-colors hover:bg-neutral-900/50">
+                      <td className="px-5 py-4">
+                        <Link href={`/cost/${g.slug}`} className="font-medium text-white underline decoration-neutral-700 hover:decoration-amber-500">{g.title}</Link>
+                      </td>
+                      <td className="px-5 py-4 text-right font-bold text-amber-400">
+                        ${g.lowEstimate.toLocaleString()} - ${g.highEstimate.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
 
-      {/* All Contractors */}
-      {standard.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">
-            All {trade.namePlural} in {city.name}
-          </h2>
-          <div className="mt-4 space-y-3">
-            {standard.map((c) => {
-              const avg = getAverageRating(c.slug);
-              const count = getReviewCount(c.slug);
-              return (
-                <Link
-                  key={c.slug}
-                  href={`/${trade.slug}/${c.slug}`}
-                  className="block rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
-                >
+        {/* All Contractors */}
+        {standard.length > 0 && (
+          <section className="mt-12">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">All Listings</p>
+            <h2 className="mt-2 text-xl font-bold text-white">All {trade.namePlural} in {city.name}</h2>
+            <div className="mt-6 space-y-3">
+              {standard.map((c) => {
+                const avg = getAverageRating(c.slug);
+                const count = getReviewCount(c.slug);
+                return (
+                  <Link
+                    key={c.slug}
+                    href={`/${trade.slug}/${c.slug}`}
+                    className="group block rounded-2xl border border-neutral-800 bg-neutral-900 p-5 transition-all hover:border-amber-500/50"
+                  >
+                    <div className="flex items-baseline justify-between">
+                      <h3 className="font-semibold text-white group-hover:text-amber-400 transition-colors">{c.name}</h3>
+                      {c.licensed && <span className="text-xs font-medium text-neutral-300">Licensed</span>}
+                    </div>
+                    <p className="mt-1 text-sm text-neutral-500">{c.specialties.join(" / ")}</p>
+                    <p className="mt-2 text-sm text-neutral-500">
+                      {c.yearsInBusiness} yrs / {c.phone}
+                      {avg !== null && <> / <span className="text-amber-400">{avg}</span> ({count})</>}
+                    </p>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Empty state */}
+        {contractors.length === 0 && (
+          <section className="mt-12">
+            <div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-8 text-center">
+              <p className="text-neutral-300">No {trade.namePlural.toLowerCase()} listed in {city.name} yet.</p>
+              <p className="mt-2 text-sm text-neutral-500">
+                Are you a {trade.name.toLowerCase()} in {city.name}?{" "}
+                <span className="font-medium text-amber-400">Contact us to get listed.</span>
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Reviews */}
+        {allReviews.length > 0 && (
+          <section className="mt-12">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Reviews</p>
+            <h2 className="mt-2 text-xl font-bold text-white">Recent {trade.name} Reviews in {city.name}</h2>
+            <div className="mt-6 space-y-4">
+              {allReviews.slice(0, 4).map((r) => (
+                <div key={r.id} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
                   <div className="flex items-baseline justify-between">
-                    <h3 className="font-semibold text-gray-900">{c.name}</h3>
-                    {c.licensed && (
-                      <span className="text-xs font-medium text-gray-700">
-                        Licensed
-                      </span>
-                    )}
+                    <span className="font-medium text-white">{r.authorName}</span>
+                    <span className="text-sm text-neutral-500">{r.date}</span>
                   </div>
-                  <p className="mt-1 text-sm text-gray-700/70">
-                    {c.specialties.join(" · ")}
-                  </p>
-                  <p className="mt-2 text-sm text-gray-700/60">
-                    {c.yearsInBusiness} years in business · {c.phone}
-                    {avg !== null && (
-                      <>
-                        {" "}
-                        · {avg} stars ({count}{" "}
-                        {count === 1 ? "review" : "reviews"})
-                      </>
-                    )}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* Empty state when no contractors at all */}
-      {contractors.length === 0 && (
-        <section className="mt-10">
-          <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-            <p className="text-gray-800">
-              No {trade.namePlural.toLowerCase()} listed in {city.name} yet.
-            </p>
-            <p className="mt-1 text-sm text-gray-700/60">
-              Are you a {trade.name.toLowerCase()} in {city.name}?{" "}
-              <span className="font-medium text-gray-700">
-                Contact us to get listed.
-              </span>
-            </p>
-          </div>
-        </section>
-      )}
-
-      {/* Recent Reviews */}
-      {allReviews.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">
-            Recent {trade.name} Reviews in {city.name}
-          </h2>
-          <div className="mt-4 space-y-4">
-            {allReviews.slice(0, 4).map((r) => (
-              <div
-                key={r.id}
-                className="rounded-lg border border-gray-200 p-5"
-              >
-                <div className="flex items-baseline justify-between">
-                  <span className="font-medium text-gray-900">
-                    {r.authorName}
-                  </span>
-                  <span className="text-sm text-gray-700/60">{r.date}</span>
+                  <div className="mt-1 text-sm">
+                    <span className="text-amber-400">{"*".repeat(r.rating)}</span>
+                    {r.projectType && <span className="ml-2 text-neutral-500">/ {r.projectType}</span>}
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-neutral-400">{r.text}</p>
+                  <Link href={`/${trade.slug}/${r.contractorSlug}`} className="mt-2 inline-block text-sm font-medium text-amber-400 hover:text-amber-300">
+                    {r.contractorName}
+                  </Link>
                 </div>
-                <div className="mt-1 text-sm text-gray-600">
-                  {"★".repeat(r.rating)}
-                  {"☆".repeat(5 - r.rating)}
-                  {r.projectType && (
-                    <span className="ml-2 text-gray-700/60">
-                      · {r.projectType}
-                    </span>
-                  )}
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-800/70">
-                  {r.text}
-                </p>
-                <Link
-                  href={`/${trade.slug}/${r.contractorSlug}`}
-                  className="mt-2 inline-block text-sm font-medium text-gray-700 underline decoration-gray-300 hover:decoration-gray-500"
-                >
-                  {r.contractorName}
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Projects */}
+        {projects.length > 0 && (
+          <section className="mt-12">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Recent Work</p>
+            <h2 className="mt-2 text-xl font-bold text-white">Recent {trade.name} Projects in {city.name}</h2>
+            <div className="mt-6 space-y-3">
+              {projects.map((p) => (
+                <Link key={p.slug} href={`/projects/${p.slug}`} className="group block rounded-2xl border border-neutral-800 bg-neutral-900 p-4 transition-all hover:border-amber-500/50">
+                  <h3 className="font-medium text-white group-hover:text-amber-400 transition-colors">{p.title}</h3>
+                  <p className="mt-1 text-sm text-neutral-500">Completed {p.completedDate}</p>
                 </Link>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Contractor CTA */}
+        <section className="mt-12 rounded-2xl border border-amber-500/20 bg-neutral-900 p-8 text-center">
+          <h2 className="text-xl font-bold text-white">Are You a {trade.name} in {city.name}?</h2>
+          <p className="mx-auto mt-3 max-w-lg text-sm text-neutral-400">
+            Get listed on GoldCountry.guide and connect with homeowners looking for {trade.namePlural.toLowerCase()} in {city.name} and {city.county} County.
+          </p>
+          <p className="mt-4 text-sm font-semibold text-amber-400">Contact us to get started</p>
         </section>
-      )}
 
-      {/* Completed Projects */}
-      {projects.length > 0 && (
-        <section className="mt-10">
-          <h2 className="text-xl font-bold text-gray-900">
-            Recent {trade.name} Projects in {city.name}
-          </h2>
-          <div className="mt-4 space-y-3">
-            {projects.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/projects/${p.slug}`}
-                className="block rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50"
-              >
-                <h3 className="font-medium text-gray-900">{p.title}</h3>
-                <p className="mt-1 text-sm text-gray-700/60">
-                  Completed {p.completedDate}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* CTA */}
-      <section className="mt-10 rounded-lg border-2 border-gray-300 bg-gray-50 p-8 text-center">
-        <h2 className="text-xl font-bold text-gray-900">
-          Are You a {trade.name} in {city.name}?
-        </h2>
-        <p className="mx-auto mt-2 max-w-lg text-sm text-gray-700/70">
-          Get listed on GoldCountry.guide and connect with homeowners looking
-          for {trade.namePlural.toLowerCase()} in {city.name} and {city.county}{" "}
-          County. Free and premium listings available.
-        </p>
-        <p className="mt-4 text-sm font-semibold text-gray-900">
-          Contact us to get started
-        </p>
-      </section>
-
-      {/* Browse other trades in this city */}
-      <section className="mt-10">
-        <h2 className="text-lg font-bold text-gray-900">
-          Other Services in {city.name}
-        </h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {trades
-            .filter((t) => t.slug !== trade.slug)
-            .map((t) => (
-              <Link
-                key={t.slug}
-                href={`/${t.slug}/${city.slug}`}
-                className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
-              >
+        {/* Cross-links */}
+        <section className="mt-12">
+          <h2 className="text-lg font-bold text-white">Other Services in {city.name}</h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {trades.filter((t) => t.slug !== trade.slug).map((t) => (
+              <Link key={t.slug} href={`/${t.slug}/${city.slug}`} className="rounded-xl border border-neutral-800 px-4 py-1.5 text-sm text-neutral-400 transition-all hover:border-amber-500/50 hover:text-white">
                 {t.namePlural}
               </Link>
             ))}
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* Browse this trade in other cities */}
-      <section className="mt-8">
-        <h2 className="text-lg font-bold text-gray-900">
-          {trade.namePlural} in Other Cities
-        </h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {cities
-            .filter((c) => c.slug !== city.slug)
-            .map((c) => (
-              <Link
-                key={c.slug}
-                href={`/${trade.slug}/${c.slug}`}
-                className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
-              >
+        <section className="mt-8">
+          <h2 className="text-lg font-bold text-white">{trade.namePlural} in Other Cities</h2>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {cities.filter((c) => c.slug !== city.slug).map((c) => (
+              <Link key={c.slug} href={`/${trade.slug}/${c.slug}`} className="rounded-xl border border-neutral-800 px-4 py-1.5 text-sm text-neutral-400 transition-all hover:border-amber-500/50 hover:text-white">
                 {c.name}
               </Link>
             ))}
-        </div>
-      </section>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
@@ -527,35 +360,19 @@ function TradeCityPage({
 /*  Contractor Profile — e.g. /electricians/jc-electrical             */
 /* ────────────────────────────────────────────────────────────────── */
 
-function ContractorProfilePage({
-  tradeSlug,
-  contractorSlug,
-}: {
-  tradeSlug: string;
-  contractorSlug: string;
-}) {
+function ContractorProfilePage({ tradeSlug, contractorSlug }: { tradeSlug: string; contractorSlug: string }) {
   const trade = getTradeBySlug(tradeSlug)!;
   const contractor = getContractorBySlug(contractorSlug)!;
-  // Profile page shows all cities (active + inactive coverage)
-  const allCities = getAllCitySlugsForContractor(contractor)
-    .map((s) => getCityBySlug(s))
-    .filter(Boolean);
-  // For display purposes, also know which cities are actively covered
+  const allCities = getAllCitySlugsForContractor(contractor).map((s) => getCityBySlug(s)).filter(Boolean);
   const activeCities = new Set(getActiveCitySlugs(contractor));
   const reviews = getReviewsByContractor(contractor.slug);
   const avg = getAverageRating(contractor.slug);
   const projects = getProjectsByContractor(contractor.slug);
   const guides = getCostGuidesByTrade(trade.slug);
 
-  // Membership gating:
-  // - isPaid: contractor has premium/featured membership AND is active
-  // - isActive: contractor membership is not lapsed
-  // When inactive, the profile page still exists (canonical URL preserved)
-  // but all lead-driving features are stripped.
   const isActive = contractor.active;
   const isPaid = isActive && contractor.membershipStatus !== "free";
 
-  // ── JSON-LD structured data ────────────────────────────────────
   const primaryCity = getCityBySlug(contractor.primaryCitySlug);
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -565,25 +382,11 @@ function ContractorProfilePage({
     telephone: contractor.phone,
     ...(contractor.website && { url: contractor.website }),
     ...(primaryCity && {
-      areaServed: allCities.map((c) => ({
-        "@type": "City",
-        name: c!.name,
-      })),
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: primaryCity.name,
-        addressRegion: "CA",
-        addressCountry: "US",
-      },
+      areaServed: allCities.map((c) => ({ "@type": "City", name: c!.name })),
+      address: { "@type": "PostalAddress", addressLocality: primaryCity.name, addressRegion: "CA", addressCountry: "US" },
     }),
     ...(avg !== null && {
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: avg,
-        reviewCount: reviews.length,
-        bestRating: 5,
-        worstRating: 1,
-      },
+      aggregateRating: { "@type": "AggregateRating", ratingValue: avg, reviewCount: reviews.length, bestRating: 5, worstRating: 1 },
     }),
   };
 
@@ -591,354 +394,79 @@ function ContractorProfilePage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: "https://goldcountry.guide/",
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: trade.namePlural,
-        item: `https://goldcountry.guide/${trade.slug}`,
-      },
-      {
-        "@type": "ListItem",
-        position: 3,
-        name: contractor.name,
-      },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://goldcountry.guide/" },
+      { "@type": "ListItem", position: 2, name: trade.namePlural, item: `https://goldcountry.guide/${trade.slug}` },
+      { "@type": "ListItem", position: 3, name: contractor.name },
     ],
   };
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
-      <JsonLd data={[jsonLd, breadcrumbLd]} />
+    <div className="bg-neutral-950">
+      <div className="mx-auto max-w-4xl px-4 py-16">
+        <JsonLd data={[jsonLd, breadcrumbLd]} />
 
-      {/* Inactive banner */}
-      {!isActive && (
-        <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 text-center">
-          <p className="text-sm font-medium text-gray-700">
-            This listing is not currently active.
-          </p>
-          <p className="mt-1 text-sm text-gray-700/60">
-            Looking for {trade.namePlural.toLowerCase()}?{" "}
-            <Link
-              href={`/${trade.slug}`}
-              className="font-medium text-gray-900 underline decoration-gray-300 hover:decoration-gray-500"
-            >
-              Browse active {trade.namePlural.toLowerCase()}
-            </Link>
-          </p>
-        </div>
-      )}
-
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-gray-700/60">
-        <Link href="/" className="hover:text-gray-700">
-          Home
-        </Link>
-        <span>/</span>
-        <Link href={`/${trade.slug}`} className="hover:text-gray-700">
-          {trade.namePlural}
-        </Link>
-        <span>/</span>
-        <span>{contractor.name}</span>
-      </nav>
-
-      {/* ── Header ── */}
-      <div className="mt-4">
-        <div className="flex items-start justify-between gap-4">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            {contractor.name}
-          </h1>
-          {isPaid && (
-            <span className="mt-1 shrink-0 rounded-full bg-gray-900 px-3 py-1 text-xs font-semibold text-white capitalize">
-              {contractor.membershipStatus}
-            </span>
-          )}
-        </div>
-
-        {/* Quick stats row */}
-        <div className="mt-3 flex flex-wrap gap-2">
-          {contractor.licensed && (
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-              Licensed
-              {contractor.licenseNumber && ` (${contractor.licenseNumber})`}
-            </span>
-          )}
-          <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-            {contractor.yearsInBusiness} years in business
-          </span>
-          {avg !== null && (
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-800">
-              {avg} stars ({reviews.length}{" "}
-              {reviews.length === 1 ? "review" : "reviews"})
-            </span>
-          )}
-        </div>
-
-        {/* Platform context line — keeps platform authority over contractor */}
-        <p className="mt-3 text-xs text-gray-700/50">
-          {trade.name} serving{" "}
-          {allCities.map((c) => c!.name).join(", ")}, CA
-          {" · "}Listed on GoldCountry.guide
-        </p>
-      </div>
-
-      {/* ── CTA — Contact / Request Quote (paid only) ── */}
-      {isPaid && (
-        <div className="mt-6 rounded-lg border-2 border-gray-300 bg-gray-50 p-6">
-          <h2 className="font-semibold text-gray-900">
-            Contact {contractor.name}
-          </h2>
-          <div className="mt-3 flex flex-wrap gap-3">
-            <a
-              href={`tel:${contractor.phone.replace(/[^+\d]/g, "")}`}
-              className="inline-flex items-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
-            >
-              Call {contractor.phone}
-            </a>
-            {contractor.website && (
-              <a
-                href={contractor.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50"
-              >
-                Visit Website
-              </a>
-            )}
+        {/* Inactive banner */}
+        {!isActive && (
+          <div className="mb-6 rounded-2xl border border-neutral-800 bg-neutral-900 p-4 text-center">
+            <p className="text-sm font-medium text-neutral-300">This listing is not currently active.</p>
+            <p className="mt-1 text-sm text-neutral-500">
+              Looking for {trade.namePlural.toLowerCase()}?{" "}
+              <Link href={`/${trade.slug}`} className="font-medium text-amber-400 hover:text-amber-300">
+                Browse active {trade.namePlural.toLowerCase()}
+              </Link>
+            </p>
           </div>
-          <p className="mt-2 text-xs text-gray-700/50">
-            Mention GoldCountry.guide when you call
-          </p>
-        </div>
-      )}
+        )}
 
-      {/* ── Business Overview ── */}
-      <section className="mt-8">
-        <h2 className="text-xl font-bold text-gray-900">About</h2>
-        <p className="mt-3 leading-relaxed text-gray-800/80">
-          {contractor.description}
-        </p>
-      </section>
+        {/* Breadcrumb */}
+        <nav className="flex items-center gap-2 text-sm text-neutral-500">
+          <Link href="/" className="transition-colors hover:text-white">Home</Link>
+          <span>/</span>
+          <Link href={`/${trade.slug}`} className="transition-colors hover:text-white">{trade.namePlural}</Link>
+          <span>/</span>
+          <span className="text-neutral-400">{contractor.name}</span>
+        </nav>
 
-      {/* ── Specialties (active only) ── */}
-      {isActive && contractor.specialties.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-xl font-bold text-gray-900">Specialties</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {contractor.specialties.map((s) => (
-              <span
-                key={s}
-                className="rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm text-gray-800"
-              >
-                {s}
+        {/* Header */}
+        <div className="mt-6">
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">{contractor.name}</h1>
+            {isPaid && (
+              <span className="mt-1 shrink-0 rounded-full bg-amber-500 px-3 py-1 text-xs font-semibold text-neutral-950 capitalize">
+                {contractor.membershipStatus}
               </span>
-            ))}
+            )}
           </div>
-        </section>
-      )}
 
-      {/* ── Service Areas (active only — shows coverage status) ── */}
-      {isActive && (
-        <section className="mt-8">
-          <h2 className="text-xl font-bold text-gray-900">Service Areas</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {allCities.map((city) => (
-              <Link
-                key={city!.slug}
-                href={`/${trade.slug}/${city!.slug}`}
-                className={`rounded-full border px-4 py-1.5 text-sm transition-colors ${
-                  activeCities.has(city!.slug)
-                    ? "border-gray-200 text-gray-800 hover:bg-gray-50"
-                    : "border-dashed border-gray-200 text-gray-400"
-                }`}
-              >
-                {city!.name}, CA
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ── Business Details ── */}
-      <section className="mt-8">
-        <h2 className="text-xl font-bold text-gray-900">Business Details</h2>
-        <div className="mt-3 overflow-hidden rounded-lg border border-gray-200">
-          <dl className="divide-y divide-gray-100 text-sm">
-            <div className="flex justify-between px-4 py-3">
-              <dt className="font-medium text-gray-800">Trade</dt>
-              <dd>
-                <Link
-                  href={`/${trade.slug}`}
-                  className="text-gray-700 underline decoration-gray-300 hover:decoration-gray-500"
-                >
-                  {trade.name}
-                </Link>
-              </dd>
-            </div>
-            <div className="flex justify-between px-4 py-3">
-              <dt className="font-medium text-gray-800">Years in Business</dt>
-              <dd className="text-gray-700">{contractor.yearsInBusiness}</dd>
-            </div>
+          <div className="mt-4 flex flex-wrap gap-2">
             {contractor.licensed && (
-              <div className="flex justify-between px-4 py-3">
-                <dt className="font-medium text-gray-800">License</dt>
-                <dd className="text-gray-700">
-                  {contractor.licenseNumber || "Licensed"}
-                </dd>
-              </div>
+              <span className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs font-medium text-neutral-300">
+                Licensed{contractor.licenseNumber && ` (${contractor.licenseNumber})`}
+              </span>
             )}
-            {/* Phone: shown for active, hidden for inactive */}
-            {isActive && (
-              <div className="flex justify-between px-4 py-3">
-                <dt className="font-medium text-gray-800">Phone</dt>
-                <dd className="text-gray-700">{contractor.phone}</dd>
-              </div>
+            <span className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs font-medium text-neutral-300">
+              {contractor.yearsInBusiness} years in business
+            </span>
+            {avg !== null && (
+              <span className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1 text-xs font-medium text-neutral-300">
+                <span className="text-amber-400">{avg}</span> ({reviews.length} {reviews.length === 1 ? "review" : "reviews"})
+              </span>
             )}
-            {/* Website: linked for paid, placeholder for free, hidden for inactive */}
-            {isActive && contractor.website && (
-              <div className="flex justify-between px-4 py-3">
-                <dt className="font-medium text-gray-800">Website</dt>
-                <dd>
-                  {isPaid ? (
-                    <a
-                      href={contractor.website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-700 underline decoration-gray-300 hover:decoration-gray-500"
-                    >
-                      {contractor.website.replace(/^https?:\/\//, "")}
-                    </a>
-                  ) : (
-                    <span className="text-gray-400">
-                      Upgrade to show website
-                    </span>
-                  )}
-                </dd>
-              </div>
-            )}
-            <div className="flex justify-between px-4 py-3">
-              <dt className="font-medium text-gray-800">Listing</dt>
-              <dd className="text-gray-700 capitalize">
-                {isActive ? contractor.membershipStatus : "Inactive"}
-              </dd>
-            </div>
-          </dl>
-        </div>
-      </section>
-
-      {/* ── Reviews (active only — reviews are discovery value) ── */}
-      {isActive && reviews.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-xl font-bold text-gray-900">
-            Reviews ({reviews.length})
-          </h2>
-          {avg !== null && (
-            <p className="mt-1 text-sm text-gray-700/70">
-              Average rating: {avg} out of 5 stars
-            </p>
-          )}
-          <div className="mt-4 space-y-4">
-            {reviews.map((r) => (
-              <div
-                key={r.id}
-                className="rounded-lg border border-gray-200 p-5"
-              >
-                <div className="flex items-baseline justify-between">
-                  <span className="font-medium text-gray-900">
-                    {r.authorName}
-                  </span>
-                  <span className="text-sm text-gray-700/60">{r.date}</span>
-                </div>
-                <div className="mt-1 text-sm text-gray-600">
-                  {"★".repeat(r.rating)}
-                  {"☆".repeat(5 - r.rating)}
-                  {r.projectType && (
-                    <span className="ml-2 text-gray-700/60">
-                      · {r.projectType}
-                    </span>
-                  )}
-                </div>
-                <p className="mt-2 text-sm leading-relaxed text-gray-800/70">
-                  {r.text}
-                </p>
-              </div>
-            ))}
           </div>
-        </section>
-      )}
 
-      {/* ── Completed Projects (active only) ── */}
-      {isActive && projects.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-xl font-bold text-gray-900">
-            Completed Projects
-          </h2>
-          <div className="mt-4 space-y-3">
-            {projects.map((p) => {
-              const pCity = getCityBySlug(p.citySlug);
-              return (
-                <Link
-                  key={p.slug}
-                  href={`/projects/${p.slug}`}
-                  className="block rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50"
-                >
-                  <h3 className="font-medium text-gray-900">{p.title}</h3>
-                  <p className="mt-1 text-sm text-gray-700/60">
-                    {pCity?.name} · Completed {p.completedDate}
-                  </p>
-                </Link>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* ── Cost Guides (platform content, not contractor-owned) ── */}
-      {guides.length > 0 && (
-        <section className="mt-8">
-          <h2 className="text-xl font-bold text-gray-900">
-            {trade.name} Cost Guides
-          </h2>
-          <p className="mt-1 text-sm text-gray-700/60">
-            Pricing data from GoldCountry.guide
+          <p className="mt-3 text-xs text-neutral-600">
+            {trade.name} serving {allCities.map((c) => c!.name).join(", ")}, CA / Listed on GoldCountry.guide
           </p>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
-            {guides.map((g) => (
-              <Link
-                key={g.slug}
-                href={`/cost/${g.slug}`}
-                className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400 hover:bg-gray-50"
-              >
-                <h3 className="font-medium text-gray-900">{g.title}</h3>
-                <p className="mt-1 text-sm font-bold text-gray-800">
-                  ${g.lowEstimate.toLocaleString()} &ndash; $
-                  {g.highEstimate.toLocaleString()}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+        </div>
 
-      {/* ── Bottom CTA ── */}
-      <section className="mt-10 rounded-lg border-2 border-gray-300 bg-gray-50 p-8 text-center">
-        {isPaid ? (
-          <>
-            <h2 className="text-xl font-bold text-gray-900">
-              Ready to Get Started?
-            </h2>
-            <p className="mx-auto mt-2 max-w-md text-sm text-gray-700/70">
-              Contact {contractor.name} today for a free estimate on your{" "}
-              {trade.name.toLowerCase()} project.
-            </p>
-            <div className="mt-4 flex flex-wrap justify-center gap-3">
+        {/* CTA - Contact (paid only) */}
+        {isPaid && (
+          <div className="mt-8 rounded-2xl border border-amber-500/20 bg-neutral-900 p-6">
+            <h2 className="font-semibold text-white">Contact {contractor.name}</h2>
+            <div className="mt-4 flex flex-wrap gap-3">
               <a
                 href={`tel:${contractor.phone.replace(/[^+\d]/g, "")}`}
-                className="inline-flex items-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
+                className="inline-flex items-center rounded-xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-amber-400"
               >
                 Call {contractor.phone}
               </a>
@@ -947,51 +475,218 @@ function ContractorProfilePage({
                   href={contractor.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-50"
+                  className="inline-flex items-center rounded-xl border border-neutral-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white"
                 >
                   Visit Website
                 </a>
               )}
             </div>
-          </>
-        ) : (
-          <>
-            <h2 className="text-xl font-bold text-gray-900">
-              {isActive
-                ? `Looking for a ${trade.name} in ${allCities.map((c) => c!.name).join(" or ")}?`
-                : `Find Active ${trade.namePlural} in Gold Country`}
-            </h2>
-            <p className="mx-auto mt-2 max-w-md text-sm text-gray-700/70">
-              Browse {trade.namePlural.toLowerCase()} on GoldCountry.guide to
-              compare options and read reviews.
-            </p>
-            <Link
-              href={`/${trade.slug}`}
-              className="mt-4 inline-flex items-center rounded-lg bg-gray-900 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
-            >
-              Browse All {trade.namePlural}
-            </Link>
-          </>
+            <p className="mt-3 text-xs text-neutral-600">Mention GoldCountry.guide when you call</p>
+          </div>
         )}
-      </section>
 
-      {/* ── Cross-links (active only) ── */}
-      {isActive && <section className="mt-10">
-        <h2 className="text-lg font-bold text-gray-900">
-          More {trade.namePlural} in Gold Country
-        </h2>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {cities.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/${trade.slug}/${c.slug}`}
-              className="rounded-full border border-gray-200 px-4 py-1.5 text-sm text-gray-800 transition-colors hover:bg-gray-50"
-            >
-              {trade.namePlural} in {c.name}
-            </Link>
-          ))}
-        </div>
-      </section>}
+        {/* About */}
+        <section className="mt-10">
+          <p className="text-sm font-medium uppercase tracking-widest text-amber-400">About</p>
+          <p className="mt-3 leading-relaxed text-neutral-400">{contractor.description}</p>
+        </section>
+
+        {/* Specialties */}
+        {isActive && contractor.specialties.length > 0 && (
+          <section className="mt-10">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Specialties</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {contractor.specialties.map((s) => (
+                <span key={s} className="rounded-full border border-neutral-700 bg-neutral-800 px-3 py-1.5 text-sm text-neutral-300">{s}</span>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Service Areas */}
+        {isActive && (
+          <section className="mt-10">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Service Areas</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {allCities.map((city) => (
+                <Link
+                  key={city!.slug}
+                  href={`/${trade.slug}/${city!.slug}`}
+                  className={`rounded-xl border px-4 py-1.5 text-sm transition-colors ${
+                    activeCities.has(city!.slug)
+                      ? "border-neutral-700 text-neutral-300 hover:border-amber-500/50 hover:text-white"
+                      : "border-dashed border-neutral-800 text-neutral-600"
+                  }`}
+                >
+                  {city!.name}, CA
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Business Details */}
+        <section className="mt-10">
+          <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Details</p>
+          <div className="mt-3 overflow-hidden rounded-2xl border border-neutral-800">
+            <dl className="divide-y divide-neutral-800 text-sm">
+              <div className="flex justify-between px-5 py-3.5">
+                <dt className="font-medium text-neutral-300">Trade</dt>
+                <dd><Link href={`/${trade.slug}`} className="text-amber-400 hover:text-amber-300">{trade.name}</Link></dd>
+              </div>
+              <div className="flex justify-between px-5 py-3.5">
+                <dt className="font-medium text-neutral-300">Years in Business</dt>
+                <dd className="text-neutral-400">{contractor.yearsInBusiness}</dd>
+              </div>
+              {contractor.licensed && (
+                <div className="flex justify-between px-5 py-3.5">
+                  <dt className="font-medium text-neutral-300">License</dt>
+                  <dd className="text-neutral-400">{contractor.licenseNumber || "Licensed"}</dd>
+                </div>
+              )}
+              {isActive && (
+                <div className="flex justify-between px-5 py-3.5">
+                  <dt className="font-medium text-neutral-300">Phone</dt>
+                  <dd className="text-neutral-400">{contractor.phone}</dd>
+                </div>
+              )}
+              {isActive && contractor.website && (
+                <div className="flex justify-between px-5 py-3.5">
+                  <dt className="font-medium text-neutral-300">Website</dt>
+                  <dd>
+                    {isPaid ? (
+                      <a href={contractor.website} target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:text-amber-300">
+                        {contractor.website.replace(/^https?:\/\//, "")}
+                      </a>
+                    ) : (
+                      <span className="text-neutral-600">Upgrade to show website</span>
+                    )}
+                  </dd>
+                </div>
+              )}
+              <div className="flex justify-between px-5 py-3.5">
+                <dt className="font-medium text-neutral-300">Listing</dt>
+                <dd className="capitalize text-neutral-400">{isActive ? contractor.membershipStatus : "Inactive"}</dd>
+              </div>
+            </dl>
+          </div>
+        </section>
+
+        {/* Reviews */}
+        {isActive && reviews.length > 0 && (
+          <section className="mt-10">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Reviews ({reviews.length})</p>
+            {avg !== null && <p className="mt-1 text-sm text-neutral-500">Average: {avg} out of 5</p>}
+            <div className="mt-6 space-y-4">
+              {reviews.map((r) => (
+                <div key={r.id} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-5">
+                  <div className="flex items-baseline justify-between">
+                    <span className="font-medium text-white">{r.authorName}</span>
+                    <span className="text-sm text-neutral-500">{r.date}</span>
+                  </div>
+                  <div className="mt-1 text-sm">
+                    <span className="text-amber-400">{"*".repeat(r.rating)}</span>
+                    {r.projectType && <span className="ml-2 text-neutral-500">/ {r.projectType}</span>}
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed text-neutral-400">{r.text}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Completed Projects */}
+        {isActive && projects.length > 0 && (
+          <section className="mt-10">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Portfolio</p>
+            <h2 className="mt-2 text-xl font-bold text-white">Completed Projects</h2>
+            <div className="mt-6 space-y-3">
+              {projects.map((p) => {
+                const pCity = getCityBySlug(p.citySlug);
+                return (
+                  <Link key={p.slug} href={`/projects/${p.slug}`} className="group block rounded-2xl border border-neutral-800 bg-neutral-900 p-4 transition-all hover:border-amber-500/50">
+                    <h3 className="font-medium text-white group-hover:text-amber-400 transition-colors">{p.title}</h3>
+                    <p className="mt-1 text-sm text-neutral-500">{pCity?.name} / Completed {p.completedDate}</p>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {/* Cost Guides */}
+        {guides.length > 0 && (
+          <section className="mt-10">
+            <p className="text-sm font-medium uppercase tracking-widest text-amber-400">Cost Guides</p>
+            <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              {guides.map((g) => (
+                <Link key={g.slug} href={`/cost/${g.slug}`} className="group rounded-2xl border border-neutral-800 bg-neutral-900 p-4 transition-all hover:border-amber-500/50">
+                  <h3 className="font-medium text-white group-hover:text-amber-400 transition-colors">{g.title}</h3>
+                  <p className="mt-1 text-sm font-bold text-amber-400">
+                    ${g.lowEstimate.toLocaleString()} - ${g.highEstimate.toLocaleString()}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Bottom CTA */}
+        <section className="mt-12 rounded-2xl border border-amber-500/20 bg-neutral-900 p-8 text-center">
+          {isPaid ? (
+            <>
+              <h2 className="text-xl font-bold text-white">Ready to Get Started?</h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-neutral-400">
+                Contact {contractor.name} today for a free estimate on your {trade.name.toLowerCase()} project.
+              </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-3">
+                <a
+                  href={`tel:${contractor.phone.replace(/[^+\d]/g, "")}`}
+                  className="inline-flex items-center rounded-xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-amber-400"
+                >
+                  Call {contractor.phone}
+                </a>
+                {contractor.website && (
+                  <a href={contractor.website} target="_blank" rel="noopener noreferrer" className="inline-flex items-center rounded-xl border border-neutral-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white">
+                    Visit Website
+                  </a>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="text-xl font-bold text-white">
+                {isActive
+                  ? `Looking for a ${trade.name} in ${allCities.map((c) => c!.name).join(" or ")}?`
+                  : `Find Active ${trade.namePlural} in Gold Country`}
+              </h2>
+              <p className="mx-auto mt-3 max-w-md text-sm text-neutral-400">
+                Browse {trade.namePlural.toLowerCase()} on GoldCountry.guide to compare options and read reviews.
+              </p>
+              <Link
+                href={`/${trade.slug}`}
+                className="mt-4 inline-flex items-center rounded-xl bg-amber-500 px-5 py-2.5 text-sm font-semibold text-neutral-950 transition-colors hover:bg-amber-400"
+              >
+                Browse All {trade.namePlural}
+              </Link>
+            </>
+          )}
+        </section>
+
+        {/* Cross-links */}
+        {isActive && (
+          <section className="mt-10">
+            <h2 className="text-lg font-bold text-white">More {trade.namePlural} in Gold Country</h2>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {cities.map((c) => (
+                <Link key={c.slug} href={`/${trade.slug}/${c.slug}`} className="rounded-xl border border-neutral-800 px-4 py-1.5 text-sm text-neutral-400 transition-all hover:border-amber-500/50 hover:text-white">
+                  {trade.namePlural} in {c.name}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

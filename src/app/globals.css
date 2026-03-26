@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #fafafa;
 }
 
 @theme inline {
@@ -10,62 +10,15 @@
   --color-foreground: var(--foreground);
 }
 
-
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Gold ripple — subtle diagonal sweep every 30s */
-.gold-ripple {
-  position: relative;
-  overflow: hidden;
-}
-
-.gold-ripple::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 10;
-  background: linear-gradient(
-    135deg,
-    transparent 0%,
-    transparent 35%,
-    rgba(202, 163, 65, 0.08) 42%,
-    rgba(202, 163, 65, 0.14) 50%,
-    rgba(202, 163, 65, 0.08) 58%,
-    transparent 65%,
-    transparent 100%
-  );
-  background-size: 300% 300%;
-  background-position: 120% 120%;
-  animation: gold-sweep 30s ease-in-out infinite;
-}
-
-@keyframes gold-sweep {
-  0%,
-  90% {
-    background-position: 120% 120%;
-    opacity: 0;
-  }
-  93% {
-    opacity: 1;
-  }
-  97% {
-    background-position: -20% -20%;
-    opacity: 1;
-  }
-  100% {
-    background-position: -20% -20%;
-    opacity: 0;
-  }
-}
-
 /* Visible focus ring for keyboard navigation */
 :focus-visible {
-  outline: 2px solid #374151;
+  outline: 2px solid #f59e0b;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -86,13 +39,10 @@ body {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Hide root layout chrome when v2 homepage is active */
-body:has(.v2-page) > header {
+/* Homepage hides standard header/footer (has its own) */
+body:has(.homepage-standalone) > header {
   display: none !important;
 }
-body:has(.v2-page) > footer {
+body:has(.homepage-standalone) > footer {
   display: none !important;
-}
-body:has(.v2-page) > main.gold-ripple::after {
-  display: none;
 }
