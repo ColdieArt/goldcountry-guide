@@ -16,6 +16,7 @@ import { costGuides } from "@/data/cost-guides";
 import { getProjectsByCity, getProjectsByTrade } from "@/data/projects";
 import GoldCountryMapWrapper from "@/components/GoldCountryMapWrapper";
 import TradeCityPicker from "@/components/TradeCityPicker";
+import { getTradeCopy } from "@/data/trade-copy";
 
 export function generateStaticParams() {
   return [
@@ -443,6 +444,7 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
   });
 
   const citiesWithContractors = cityOptions.filter((c) => c.contractorCount > 0);
+  const copy = getTradeCopy(trade.slug);
 
   return (
     <div>
@@ -480,6 +482,78 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
             cities={cityOptions}
           />
         </section>
+
+        {/* ── Why These Contractors ─────────────────────────────────── */}
+        {copy && (
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Why These {trade.namePlural}
+            </h2>
+            <div className="mt-4 max-w-3xl space-y-4 text-gray-700 leading-relaxed">
+              <p>{copy.vettedIntro}</p>
+            </div>
+
+            <div className="mt-8 rounded-lg border border-gray-200 bg-gray-50/50 p-6">
+              <h3 className="font-semibold text-gray-900">
+                How We Vet Contractors
+              </h3>
+              <div className="mt-3 grid gap-4 sm:grid-cols-3">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Trade-Vetted</p>
+                  <p className="mt-1 text-sm text-gray-600">
+                    Every contractor is recommended by other tradespeople who&apos;ve worked alongside them on real jobs.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Small List, By Design</p>
+                  <p className="mt-1 text-sm text-gray-600">
+                    We keep the numbers low so you&apos;re choosing from the best, not sorting through the rest.
+                  </p>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Built by a Local</p>
+                  <p className="mt-1 text-sm text-gray-600">
+                    This site was created by a Gold Country homeowner who got tired of the guesswork and wants to make the process better for everyone.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── Local Context ───────────────────────────────────────────── */}
+        {copy && (
+          <section className="border-t border-gray-100 py-12">
+            <h2 className="text-2xl font-bold text-gray-900">
+              {trade.namePlural} in Gold Country &mdash; What You Should Know
+            </h2>
+            <div className="mt-4 max-w-3xl space-y-4 text-gray-700 leading-relaxed">
+              <p>{copy.localContext}</p>
+            </div>
+
+            <div className="mt-8">
+              <h3 className="font-semibold text-gray-900">
+                What to Look for When Hiring
+              </h3>
+              <ul className="mt-3 space-y-2">
+                {copy.whatToLookFor.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-3 text-sm text-gray-700"
+                  >
+                    <span className="mt-1.5 block h-1.5 w-1.5 shrink-0 rounded-full bg-amber-500" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-6 rounded-lg border border-amber-200 bg-amber-50/50 px-5 py-4">
+              <p className="text-sm font-medium text-gray-900">On Cost</p>
+              <p className="mt-1 text-sm text-gray-700">{copy.costDisclaimer}</p>
+            </div>
+          </section>
+        )}
 
         {/* ── Common Services ───────────────────────────────────────── */}
         {allSpecialties.length > 0 && (
