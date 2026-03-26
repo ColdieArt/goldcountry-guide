@@ -15,6 +15,7 @@ import { getCostGuidesByTrade } from "@/data/cost-guides";
 import { costGuides } from "@/data/cost-guides";
 import { getProjectsByCity, getProjectsByTrade } from "@/data/projects";
 import GoldCountryMapWrapper from "@/components/GoldCountryMapWrapper";
+import TradeCityPicker from "@/components/TradeCityPicker";
 
 export function generateStaticParams() {
   return [
@@ -417,94 +418,67 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
     new Set(contractors.flatMap((c) => c.specialties))
   );
 
-  // Count total cities served
-  const citiesWithContractors = cities.filter(
-    (city) => getContractorsByTradeAndCity(trade.slug, city.slug).length > 0
-  );
+  // Build city data with embedded contractors for the picker
+  const cityOptions = cities.map((city) => {
+    const cityContractors = getContractorsByTradeAndCity(trade.slug, city.slug);
+    return {
+      slug: city.slug,
+      name: city.name,
+      county: city.county,
+      contractorCount: cityContractors.length,
+      contractors: cityContractors.map((c) => ({
+        slug: c.slug,
+        name: c.name,
+        tradeSlug: c.tradeSlug,
+        specialties: c.specialties,
+        yearsInBusiness: c.yearsInBusiness,
+        licensed: c.licensed,
+        membershipStatus: c.membershipStatus,
+        phone: c.phone,
+        description: c.description,
+        avgRating: getAverageRating(c.slug),
+        reviewCount: getReviewCount(c.slug),
+      })),
+    };
+  });
+
+  const citiesWithContractors = cityOptions.filter((c) => c.contractorCount > 0);
 
   return (
     <div>
       {/* ── Hero ────────────────────────────────────────────────────── */}
-      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-16 text-center">
+      <section className="bg-gradient-to-b from-gray-50 to-white px-4 py-12 text-center">
         <nav className="flex items-center justify-center gap-1 text-sm text-gray-700/60">
           <Link href="/" className="hover:text-gray-700">Home</Link>
           <span>/</span>
           <span>{trade.namePlural}</span>
         </nav>
-        <p className="mt-3 text-sm font-medium uppercase tracking-wide text-gray-700/60">
-          Gold Country &amp; Sierra Foothills
-        </p>
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+        <h1 className="mt-3 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           {trade.namePlural} in Gold Country
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-800/70">
           {trade.description}
         </p>
-        <div className="mt-6 flex items-center justify-center gap-4 text-sm text-gray-700/60">
+        <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-700/60">
           <span>
             {contractors.length} contractor{contractors.length !== 1 && "s"}
           </span>
           <span className="text-gray-300">|</span>
           <span>
-            {citiesWithContractors.length} of {cities.length} cities served
+            {citiesWithContractors.length} cities served
           </span>
-          {guides.length > 0 && (
-            <>
-              <span className="text-gray-300">|</span>
-              <span>
-                {guides.length} cost {guides.length === 1 ? "guide" : "guides"}
-              </span>
-            </>
-          )}
         </div>
       </section>
 
       <div className="mx-auto max-w-6xl px-4">
-        {/* ── Find by City ──────────────────────────────────────────── */}
-        <section className="py-12">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Find {trade.namePlural} by City
-          </h2>
-          <p className="mt-2 text-gray-700/70">
-            Select your city to see available {trade.namePlural.toLowerCase()} in your area.
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {cities.map((city) => {
-              const cityContractors = getContractorsByTradeAndCity(
-                trade.slug,
-                city.slug
-              );
-              const count = cityContractors.length;
-              return (
-                <Link
-                  key={city.slug}
-                  href={`/${trade.slug}/${city.slug}`}
-                  className="group rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
-                >
-                  <div className="flex items-baseline justify-between">
-                    <h3 className="font-semibold text-gray-900">
-                      {city.name}
-                    </h3>
-                    {count > 0 ? (
-                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
-                        {count}
-                      </span>
-                    ) : (
-                      <span className="text-xs text-gray-500">Coming soon</span>
-                    )}
-                  </div>
-                  <p className="mt-1 text-sm text-gray-700/60">
-                    {city.county} County
-                  </p>
-                  {count > 0 && (
-                    <p className="mt-2 text-xs font-medium text-gray-600 opacity-0 transition-opacity group-hover:opacity-100">
-                      View {count} {trade.namePlural.toLowerCase()} &rarr;
-                    </p>
-                  )}
-                </Link>
-              );
-            })}
-          </div>
+        {/* ── City Picker + Contractor Results ─────────────────────── */}
+        <section className="py-10">
+          <TradeCityPicker
+            tradeSlug={trade.slug}
+            tradeName={trade.name}
+            tradeNamePlural={trade.namePlural}
+            cities={cityOptions}
+          />
         </section>
 
         {/* ── Common Services ───────────────────────────────────────── */}
@@ -567,71 +541,6 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
           </section>
         )}
 
-        {/* ── All Contractors ───────────────────────────────────────── */}
-        {contractors.length > 0 && (
-          <section className="border-t border-gray-100 py-12">
-            <h2 className="text-2xl font-bold text-gray-900">
-              All {trade.namePlural} in Gold Country
-            </h2>
-            <div className="mt-6 space-y-4">
-              {contractors.map((c) => {
-                const avg = getAverageRating(c.slug);
-                const reviewCount = getReviewCount(c.slug);
-                const serviceCities = getActiveCitySlugs(c)
-                  .map((s) => getCityBySlug(s))
-                  .filter(Boolean);
-                return (
-                  <Link
-                    key={c.slug}
-                    href={`/${trade.slug}/${c.slug}`}
-                    className="block rounded-lg border border-gray-200 p-5 transition-colors hover:border-gray-400 hover:bg-gray-50"
-                  >
-                    <div className="flex items-baseline justify-between">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        {c.name}
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        {c.membershipStatus !== "free" && (
-                          <span className="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium capitalize text-gray-800">
-                            {c.membershipStatus}
-                          </span>
-                        )}
-                        {c.licensed && (
-                          <span className="text-xs font-medium text-gray-700">
-                            Licensed
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <p className="mt-1 text-sm text-gray-700/70">
-                      {c.specialties.join(" · ")}
-                    </p>
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-700/60">
-                      <span>{c.yearsInBusiness} years in business</span>
-                      {avg !== null && (
-                        <span>
-                          {"★".repeat(Math.round(avg))}
-                          {"☆".repeat(5 - Math.round(avg))}{" "}
-                          ({reviewCount})
-                        </span>
-                      )}
-                      <span>
-                        Serves{" "}
-                        {serviceCities.map((city, i) => (
-                          <span key={city!.slug}>
-                            {i > 0 && ", "}
-                            {city!.name}
-                          </span>
-                        ))}
-                      </span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
         {/* ── Recent Projects ───────────────────────────────────────── */}
         {projects.length > 0 && (
           <section className="border-t border-gray-100 py-12">
@@ -676,20 +585,14 @@ function TradePage({ tradeSlug }: { tradeSlug: string }) {
             Need a {trade.name}?
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-gray-700/70">
-            Browse {trade.namePlural.toLowerCase()} by city and request quotes
-            from licensed, local professionals in the Gold Country area.
+            Request quotes from licensed, local {trade.namePlural.toLowerCase()} in the Gold Country area.
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            {citiesWithContractors.slice(0, 4).map((city) => (
-              <Link
-                key={city.slug}
-                href={`/${trade.slug}/${city.slug}`}
-                className="rounded-lg bg-gray-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-gray-800"
-              >
-                {trade.namePlural} in {city.name}
-              </Link>
-            ))}
-          </div>
+          <Link
+            href="/request"
+            className="mt-6 inline-block rounded-lg bg-amber-500 px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-600"
+          >
+            Get Free Quotes
+          </Link>
           <p className="mt-4 text-sm text-gray-700/50">
             Or browse{" "}
             <Link href="/" className="underline hover:text-gray-700">
