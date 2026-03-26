@@ -91,7 +91,7 @@ const SERVICE_CATEGORIES = [
   { value: "plumbers", label: "Plumbing", icon: "🔧" },
   { value: "electricians", label: "Electrical", icon: "⚡" },
   { value: "roofers", label: "Roofing", icon: "🏗️" },
-  { value: "tree-service", label: "Landscaping & Trees", icon: "🌳" },
+  { value: "landscape", label: "Landscaping & Trees", icon: "🌳" },
   { value: "hvac", label: "HVAC / Heating & Cooling", icon: "❄️" },
   { value: "concrete-contractors", label: "Concrete & Flatwork", icon: "🧱" },
   { value: "architects", label: "Design & Architecture", icon: "📐" },
@@ -144,7 +144,7 @@ const SUBCATEGORIES: Record<string, { value: string; label: string }[]> = {
     { value: "ductwork", label: "Ductwork" },
     { value: "other", label: "Other" },
   ],
-  "tree-service": [
+  "landscape": [
     { value: "removal", label: "Tree removal" },
     { value: "trimming", label: "Trimming / Pruning" },
     { value: "stump-grinding", label: "Stump grinding" },

@@ -415,11 +415,11 @@ export const contractors: Contractor[] = [
     active: true,
   },
 
-  // ─── Tree Service ─────────────────────────────────────────────
+  // ─── Landscape ───────────────────────────────────────────────
   {
     slug: "gold-country-tree-care",
     name: "Gold Country Tree Care",
-    tradeSlug: "tree-service",
+    tradeSlug: "landscape",
     primaryCitySlug: "auburn",
     additionalCities: [
       { citySlug: "newcastle", active: true },
@@ -437,7 +437,7 @@ export const contractors: Contractor[] = [
   {
     slug: "sierra-arbor-works",
     name: "Sierra Arbor Works",
-    tradeSlug: "tree-service",
+    tradeSlug: "landscape",
     primaryCitySlug: "nevada-city",
     additionalCities: [
       { citySlug: "grass-valley", active: true },
@@ -454,7 +454,7 @@ export const contractors: Contractor[] = [
   {
     slug: "placer-tree-pros",
     name: "Placer Tree Pros",
-    tradeSlug: "tree-service",
+    tradeSlug: "landscape",
     primaryCitySlug: "rocklin",
     additionalCities: [
       { citySlug: "roseville", active: true },
@@ -472,7 +472,7 @@ export const contractors: Contractor[] = [
   {
     slug: "loomis-tree-service",
     name: "Loomis Tree Service",
-    tradeSlug: "tree-service",
+    tradeSlug: "landscape",
     primaryCitySlug: "loomis",
     additionalCities: [
       { citySlug: "newcastle", active: true },
@@ -490,7 +490,7 @@ export const contractors: Contractor[] = [
   {
     slug: "roseville-tree-experts",
     name: "Roseville Tree Experts",
-    tradeSlug: "tree-service",
+    tradeSlug: "landscape",
     primaryCitySlug: "roseville",
     additionalCities: [
       { citySlug: "rocklin", active: true },

@@ -30,11 +30,11 @@ export const trades: Trade[] = [
       "Heating and cooling specialists for AC installation, furnace repair, and ductwork.",
   },
   {
-    slug: "tree-service",
-    name: "Tree Service Professional",
-    namePlural: "Tree Services",
+    slug: "landscape",
+    name: "Landscape Professional",
+    namePlural: "Landscape",
     description:
-      "Tree care professionals for removal, trimming, stump grinding, and emergency storm cleanup.",
+      "Landscape professionals for design, installation, maintenance, tree care, and outdoor living spaces.",
   },
   {
     slug: "general-contractors",

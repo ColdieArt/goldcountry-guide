@@ -21,7 +21,7 @@ const TRADE_COLORS: Record<string, { bg: string; border: string; label: string }
   plumbers:             { bg: "#3b82f6", border: "#2563eb", label: "Plumbers" },
   roofers:              { bg: "#ef4444", border: "#dc2626", label: "Roofers" },
   hvac:                 { bg: "#10b981", border: "#059669", label: "HVAC" },
-  "tree-service":       { bg: "#22c55e", border: "#16a34a", label: "Tree Service" },
+  "landscape":          { bg: "#22c55e", border: "#16a34a", label: "Landscape" },
   "general-contractors": { bg: "#8b5cf6", border: "#7c3aed", label: "General Contractors" },
   "concrete-contractors": { bg: "#6b7280", border: "#4b5563", label: "Concrete" },
   architects:           { bg: "#ec4899", border: "#db2777", label: "Architects" },
@@ -62,12 +62,12 @@ const CONTRACTORS: MapContractor[] = [
   { name: "Roseville Comfort HVAC", tradeSlug: "hvac", primaryCity: "roseville", additionalCities: ["rocklin", "loomis"] },
   { name: "NV City HVAC", tradeSlug: "hvac", primaryCity: "nevada-city", additionalCities: ["grass-valley"] },
   { name: "Placer Air Systems", tradeSlug: "hvac", primaryCity: "rocklin", additionalCities: ["roseville", "auburn"] },
-  // Tree Service
-  { name: "Gold Country Tree Care", tradeSlug: "tree-service", primaryCity: "auburn", additionalCities: ["newcastle", "grass-valley"] },
-  { name: "Sierra Arbor Works", tradeSlug: "tree-service", primaryCity: "nevada-city", additionalCities: ["grass-valley"] },
-  { name: "Placer Tree Pros", tradeSlug: "tree-service", primaryCity: "rocklin", additionalCities: ["roseville", "loomis"] },
-  { name: "Loomis Tree Service", tradeSlug: "tree-service", primaryCity: "loomis", additionalCities: ["newcastle", "auburn"] },
-  { name: "Roseville Tree Experts", tradeSlug: "tree-service", primaryCity: "roseville", additionalCities: ["rocklin"] },
+  // Landscape
+  { name: "Gold Country Tree Care", tradeSlug: "landscape", primaryCity: "auburn", additionalCities: ["newcastle", "grass-valley"] },
+  { name: "Sierra Arbor Works", tradeSlug: "landscape", primaryCity: "nevada-city", additionalCities: ["grass-valley"] },
+  { name: "Placer Tree Pros", tradeSlug: "landscape", primaryCity: "rocklin", additionalCities: ["roseville", "loomis"] },
+  { name: "Loomis Tree Service", tradeSlug: "landscape", primaryCity: "loomis", additionalCities: ["newcastle", "auburn"] },
+  { name: "Roseville Tree Experts", tradeSlug: "landscape", primaryCity: "roseville", additionalCities: ["rocklin"] },
   // General Contractors
   { name: "Auburn Builders", tradeSlug: "general-contractors", primaryCity: "auburn", additionalCities: ["newcastle", "grass-valley"] },
   { name: "Sierra Summit Construction", tradeSlug: "general-contractors", primaryCity: "grass-valley", additionalCities: ["nevada-city"] },

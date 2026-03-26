@@ -4,7 +4,7 @@ import { cities } from "@/data/cities";
 const navTrades = [
   { slug: "general-contractors", label: "General Contractors" },
   { slug: "architects", label: "Architects" },
-  { slug: "tree-service", label: "Tree Services" },
+  { slug: "landscape", label: "Landscape" },
   { slug: "concrete-contractors", label: "Concrete" },
   { slug: "hvac", label: "HVAC" },
   { slug: "electricians", label: "Electricians" },
@@ -56,6 +56,12 @@ export default function Header() {
                 {trade.label}
               </Link>
             ))}
+            <Link
+              href="/guides"
+              className="hidden hover:text-gray-600 sm:block"
+            >
+              Guides
+            </Link>
           </nav>
         </div>
       </div>
