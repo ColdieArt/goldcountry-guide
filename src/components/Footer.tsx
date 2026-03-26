@@ -1,8 +1,16 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { trades } from "@/data/trades";
 import { cities } from "@/data/cities";
 
 export default function Footer() {
+  const pathname = usePathname();
+
+  // Homepage has its own footer - don't render the standard one
+  if (pathname === "/" || pathname === "/v2") return null;
+
   return (
     <footer className="border-t border-neutral-800 bg-neutral-950" aria-label="Site footer">
       <div className="mx-auto max-w-7xl px-6 py-12">

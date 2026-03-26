@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cities } from "@/data/cities";
 
@@ -13,6 +16,11 @@ const navTrades = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+
+  // Homepage has its own nav - don't render the standard header
+  if (pathname === "/" || pathname === "/v2") return null;
+
   return (
     <header>
       {/* City bar */}

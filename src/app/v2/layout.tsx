@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function V2Layout({ children }: { children: React.ReactNode }) {
-  return <div className="homepage-standalone">{children}</div>;
+  return <>{children}</>;
 }

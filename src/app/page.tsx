@@ -46,7 +46,7 @@ export default function Home() {
   }));
 
   return (
-    <div className="homepage-standalone">
+    <>
       <HomeV2
         trades={tradeData}
         cities={cityData}
@@ -54,6 +54,6 @@ export default function Home() {
         totalContractors={contractors.length}
         totalCities={cities.length}
       />
-    </div>
+    </>
   );
 }

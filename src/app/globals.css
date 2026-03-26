@@ -39,10 +39,3 @@ body {
   animation: fadeIn 0.3s ease-out;
 }
 
-/* Homepage hides standard header/footer (has its own) */
-body:has(.homepage-standalone) > header {
-  display: none !important;
-}
-body:has(.homepage-standalone) > footer {
-  display: none !important;
-}
